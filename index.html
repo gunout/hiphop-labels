@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hip-Hop Labels - Dashboard Stratégique Comparatif</title>
+    <title>Hip-Hop Labels - Dashboard Stratégique Enrichi</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
         * {
@@ -211,7 +211,7 @@
         /* ============ LABEL CARDS ============ */
         .label-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 1.25rem;
             margin-bottom: 2rem;
         }
@@ -336,6 +336,48 @@
             color: var(--text);
         }
 
+        /* ============ INFO CARDS ============ */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: border-color 0.2s;
+        }
+
+        .info-card:hover {
+            border-color: var(--border-light);
+        }
+
+        .info-card .info-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.4rem;
+        }
+
+        .info-card .info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .info-card .info-detail {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.4rem;
+            line-height: 1.5;
+        }
+
         /* ============ ARTIST TABLE ============ */
         .table-wrapper {
             background: var(--bg-card);
@@ -349,7 +391,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
-            min-width: 700px;
+            min-width: 800px;
         }
 
         .artist-table th {
@@ -382,6 +424,49 @@
         .artist-table .artist-name {
             font-weight: 700;
             letter-spacing: 0.3px;
+        }
+
+        /* ============ TIMELINE ============ */
+        .timeline-list {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-year {
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .timeline-content {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .timeline-content .event-type {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 0.5rem;
+            vertical-align: middle;
         }
 
         /* ============ COMPARATOR ============ */
@@ -531,11 +616,6 @@
         .js-plotly-plot .plotly .modebar-btn:hover path {
             fill: #fff !important;
         }
-
-        /* Fix pour éviter le chevauchement des graphiques */
-        .chart-container > div {
-            width: 100% !important;
-        }
     </style>
 </head>
 <body>
@@ -543,7 +623,7 @@
 <!-- Header -->
 <header class="main-header">
     <h1>🎤 Hip-Hop Labels</h1>
-    <p>Dashboard Stratégique Comparatif • 7 Labels Légendaires • 1984-2024</p>
+    <p>Dashboard Stratégique Enrichi • 7 Labels Légendaires • Données Détaillées 1984-2024</p>
 </header>
 
 <!-- Navigation -->
@@ -568,7 +648,7 @@
         <div class="label-cards" id="labelCards"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="overviewSalesChart"></div></div>
-            <div class="chart-container"><div id="overviewInfluenceChart"></div></div>
+            <div class="chart-container"><div id="overviewRevenueChart"></div></div>
         </div>
         <div class="chart-container"><div id="overviewTimelineChart"></div></div>
     </div>
@@ -576,106 +656,99 @@
     <!-- DEF JAM -->
     <div class="tab-content" id="defjam">
         <div class="metrics-grid" id="defjamMetrics"></div>
+        <div class="info-grid" id="defjamInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="defjamArtistsChart"></div></div>
             <div class="chart-container"><div id="defjamROIChart"></div></div>
         </div>
         <div class="section-title" style="color:#FF3B3B">👑 Artistes Légendaires</div>
         <div class="table-wrapper" id="defjamArtistTable"></div>
-        <div class="charts-grid">
-            <div class="chart-container"><div id="defjamProductionChart"></div></div>
-            <div class="chart-container"><div id="defjamMarketingChart"></div></div>
-        </div>
+        <div class="section-title" style="color:#FF3B3B">📜 Chronologie</div>
+        <div class="timeline-list" id="defjamTimeline"></div>
     </div>
 
     <!-- SOUL ASSASSINS -->
     <div class="tab-content" id="soulassassins">
         <div class="metrics-grid" id="soulassassinsMetrics"></div>
+        <div class="info-grid" id="soulassassinsInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="soulassassinsArtistsChart"></div></div>
             <div class="chart-container"><div id="soulassassinsROIChart"></div></div>
         </div>
         <div class="section-title" style="color:#A855F7">💀 Artistes Underground</div>
         <div class="table-wrapper" id="soulassassinsArtistTable"></div>
-        <div class="charts-grid">
-            <div class="chart-container"><div id="soulassassinsProductionChart"></div></div>
-            <div class="chart-container"><div id="soulassassinsMarketingChart"></div></div>
-        </div>
+        <div class="section-title" style="color:#A855F7">📜 Chronologie</div>
+        <div class="timeline-list" id="soulassassinsTimeline"></div>
     </div>
 
     <!-- AFTERMATH -->
     <div class="tab-content" id="aftermath">
         <div class="metrics-grid" id="aftermathMetrics"></div>
+        <div class="info-grid" id="aftermathInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="aftermathArtistsChart"></div></div>
             <div class="chart-container"><div id="aftermathROIChart"></div></div>
         </div>
         <div class="section-title" style="color:#FFD700">🎧 Artistes Premium</div>
         <div class="table-wrapper" id="aftermathArtistTable"></div>
-        <div class="charts-grid">
-            <div class="chart-container"><div id="aftermathProductionChart"></div></div>
-            <div class="chart-container"><div id="aftermathMarketingChart"></div></div>
-        </div>
+        <div class="section-title" style="color:#FFD700">📜 Chronologie</div>
+        <div class="timeline-list" id="aftermathTimeline"></div>
     </div>
 
     <!-- SHADY -->
     <div class="tab-content" id="shady">
         <div class="metrics-grid" id="shadyMetrics"></div>
+        <div class="info-grid" id="shadyInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="shadyArtistsChart"></div></div>
             <div class="chart-container"><div id="shadyROIChart"></div></div>
         </div>
         <div class="section-title" style="color:#22C55E">👻 Artistes Shady</div>
         <div class="table-wrapper" id="shadyArtistTable"></div>
-        <div class="charts-grid">
-            <div class="chart-container"><div id="shadyProductionChart"></div></div>
-            <div class="chart-container"><div id="shadyMarketingChart"></div></div>
-        </div>
+        <div class="section-title" style="color:#22C55E">📜 Chronologie</div>
+        <div class="timeline-list" id="shadyTimeline"></div>
     </div>
 
     <!-- BAD BOY -->
     <div class="tab-content" id="badboy">
         <div class="metrics-grid" id="badboyMetrics"></div>
+        <div class="info-grid" id="badboyInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="badboyArtistsChart"></div></div>
             <div class="chart-container"><div id="badboyROIChart"></div></div>
         </div>
         <div class="section-title" style="color:#D4D4D4">👑 Artistes Bad Boy</div>
         <div class="table-wrapper" id="badboyArtistTable"></div>
-        <div class="charts-grid">
-            <div class="chart-container"><div id="badboyProductionChart"></div></div>
-            <div class="chart-container"><div id="badboyMarketingChart"></div></div>
-        </div>
+        <div class="section-title" style="color:#D4D4D4">📜 Chronologie</div>
+        <div class="timeline-list" id="badboyTimeline"></div>
     </div>
 
     <!-- RUTHLESS -->
     <div class="tab-content" id="ruthless">
         <div class="metrics-grid" id="ruthlessMetrics"></div>
+        <div class="info-grid" id="ruthlessInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="ruthlessArtistsChart"></div></div>
             <div class="chart-container"><div id="ruthlessROIChart"></div></div>
         </div>
         <div class="section-title" style="color:#FBBF24">🎤 Artistes Ruthless</div>
         <div class="table-wrapper" id="ruthlessArtistTable"></div>
-        <div class="charts-grid">
-            <div class="chart-container"><div id="ruthlessProductionChart"></div></div>
-            <div class="chart-container"><div id="ruthlessMarketingChart"></div></div>
-        </div>
+        <div class="section-title" style="color:#FBBF24">📜 Chronologie</div>
+        <div class="timeline-list" id="ruthlessTimeline"></div>
     </div>
 
     <!-- DEATH ROW -->
     <div class="tab-content" id="deathrow">
         <div class="metrics-grid" id="deathrowMetrics"></div>
+        <div class="info-grid" id="deathrowInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="deathrowArtistsChart"></div></div>
             <div class="chart-container"><div id="deathrowROIChart"></div></div>
         </div>
         <div class="section-title" style="color:#EF4444">🎤 Artistes Death Row</div>
         <div class="table-wrapper" id="deathrowArtistTable"></div>
-        <div class="charts-grid">
-            <div class="chart-container"><div id="deathrowProductionChart"></div></div>
-            <div class="chart-container"><div id="deathrowMarketingChart"></div></div>
-        </div>
+        <div class="section-title" style="color:#EF4444">📜 Chronologie</div>
+        <div class="timeline-list" id="deathrowTimeline"></div>
     </div>
 
     <!-- COMPARATOR -->
@@ -719,9 +792,6 @@
                 <div class="chart-container"><div id="compareRadarChart"></div></div>
                 <div class="chart-container"><div id="compareBarChart"></div></div>
             </div>
-            <div class="chart-container" style="margin-top:1.25rem;">
-                <div id="compareTimelineChart"></div>
-            </div>
         </div>
 
         <div class="section-title">📊 Tableau Comparatif Détaillé</div>
@@ -732,12 +802,12 @@
 
 <footer class="footer">
     <div class="title">Hip-Hop Labels Dashboard</div>
-    <div>Analyse comparative 1984-2024 • Données à des fins éducatives</div>
+    <div>Analyse comparative 1984-2024 • Données enrichies à des fins éducatives</div>
 </footer>
 
 <script>
 // ============================================================
-// DATA
+// DATA ENRICHIE
 // ============================================================
 
 const LABELS_DATA = {
@@ -748,22 +818,39 @@ const LABELS_DATA = {
         founders: "Rick Rubin, Russell Simmons",
         genre: "Hip-hop, R&B, Urban",
         philosophy: "Original, authentic, street music",
+        distribution: "Universal Music Group",
+        headquarters: "New York City, New York, USA",
         totalSales: 269000000,
         totalArtists: 9,
         totalAlbums: 75,
         totalRevenue: 2050000000,
+        peakRevenue: "250M$ (1999)",
         influence: 85,
+        keyFact: "Fondé dans une chambre universitaire à NYU avec un prêt parental. Le label a révolutionné le hip-hop commercial et a lancé des carrières légendaires comme LL Cool J, Beastie Boys, Public Enemy, Jay-Z, Kanye West et Rihanna.",
         artists: {
-            "RICK RUBIN": { debut: 1984, genre: "Hip-hop, Rock", albums: 30, sales: 50000000, revenue: 200000000, roi: 800, influence: 10, success: "Co-fondateur" },
-            "RUSSELL SIMMONS": { debut: 1984, genre: "Hip-hop, Business", albums: 40, sales: 60000000, revenue: 300000000, roi: 750, influence: 9, success: "Visionnaire" },
-            "LL COOL J": { debut: 1985, genre: "Hip-hop, R&B", albums: 13, sales: 15000000, revenue: 80000000, roi: 600, influence: 8, success: "Radio (1985)" },
-            "JAY-Z": { debut: 1996, genre: "Hip-hop, Business", albums: 11, sales: 50000000, revenue: 1000000000, roi: 1000, influence: 10, success: "Reasonable Doubt" },
-            "KANYE WEST": { debut: 2004, genre: "Hip-hop, Experimental", albums: 6, sales: 35000000, revenue: 250000000, roi: 900, influence: 10, success: "College Dropout" },
-            "RZA": { debut: 1993, genre: "Hip-hop, Production", albums: 5, sales: 8000000, revenue: 40000000, roi: 500, influence: 9, success: "Enter the Wu-Tang" },
-            "METHOD MAN": { debut: 1994, genre: "Hip-hop, Hardcore", albums: 4, sales: 6000000, revenue: 30000000, roi: 450, influence: 8, success: "Tical (1994)" },
-            "BEASTIE BOYS": { debut: 1986, genre: "Hip-hop, Rock", albums: 1, sales: 10000000, revenue: 50000000, roi: 550, influence: 9, success: "Licensed to Ill" },
-            "PUBLIC ENEMY": { debut: 1987, genre: "Hip-hop, Politique", albums: 3, sales: 5000000, revenue: 25000000, roi: 400, influence: 10, success: "It Takes a Nation" }
-        }
+            "RICK RUBIN": { debut: 1984, genre: "Hip-hop, Rock", albums: 30, sales: 50000000, revenue: 200000000, roi: 800, influence: 10, success: "Co-fondateur", note: "A quitté Def Jam en 1988 pour fonder Def American" },
+            "RUSSELL SIMMONS": { debut: 1984, genre: "Hip-hop, Business", albums: 40, sales: 60000000, revenue: 300000000, roi: 750, influence: 9, success: "Visionnaire commercial", note: "A quitté le label en 1999. A popularisé le hip-hop dans la culture mainstream" },
+            "LL COOL J": { debut: 1985, genre: "Hip-hop, R&B", albums: 13, sales: 15000000, revenue: 80000000, roi: 600, influence: 8, success: "Radio (1985)", note: "Premier artiste du label. Pionnier du rap romantique" },
+            "JAY-Z": { debut: 1996, genre: "Hip-hop, Business", albums: 11, sales: 50000000, revenue: 1000000000, roi: 1000, influence: 10, success: "Reasonable Doubt (1996)", note: "Ancien CEO de Def Jam (2004-2007). Icône culturelle et businessman" },
+            "KANYE WEST": { debut: 2004, genre: "Hip-hop, Experimental", albums: 6, sales: 35000000, revenue: 250000000, roi: 900, influence: 10, success: "College Dropout (2004)", note: "A fusionné hip-hop, mode et art" },
+            "RZA": { debut: 1993, genre: "Hip-hop, Production", albums: 5, sales: 8000000, revenue: 40000000, roi: 500, influence: 9, success: "Enter the Wu-Tang", note: "Leader et producteur du Wu-Tang Clan" },
+            "METHOD MAN": { debut: 1994, genre: "Hip-hop, Hardcore", albums: 4, sales: 6000000, revenue: 30000000, roi: 450, influence: 8, success: "Tical (1994)", note: "Membre du Wu-Tang, star solo et acteur" },
+            "BEASTIE BOYS": { debut: 1986, genre: "Hip-hop, Rock", albums: 1, sales: 10000000, revenue: 50000000, roi: 550, influence: 9, success: "Licensed to Ill (1986)", note: "Premier groupe blanc de hip-hop. Licensed to Ill = best-seller des années 80" },
+            "PUBLIC ENEMY": { debut: 1987, genre: "Hip-hop, Politique", albums: 3, sales: 5000000, revenue: 25000000, roi: 400, influence: 10, success: "It Takes a Nation...", note: "Pionnier du hip-hop politique et conscient" }
+        },
+        timeline: [
+            { year: 1984, event: "Fondation par Rick Rubin dans sa chambre universitaire à NYU", type: "Structure" },
+            { year: 1985, event: "Signature de LL Cool J - premier album Radio", type: "Artiste" },
+            { year: 1986, event: "Licensed to Ill (Beastie Boys) - premier #1 hip-hop", type: "Album" },
+            { year: 1987, event: "Signature de Public Enemy", type: "Artiste" },
+            { year: 1988, event: "Départ de Rick Rubin", type: "Structure" },
+            { year: 1996, event: "Signature de Jay-Z", type: "Artiste" },
+            { year: 1999, event: "Russell Simmons quitte le label. Vente à Universal", type: "Business" },
+            { year: 2004, event: "The College Dropout (Kanye West)", type: "Album" },
+            { year: 2004, event: "Jay-Z devient CEO", type: "Structure" },
+            { year: 2007, event: "Jay-Z quitte le poste de CEO", type: "Structure" },
+            { year: 2024, event: "40ème anniversaire du label", type: "Événement" }
+        ]
     },
     soulassassins: {
         name: "Soul Assassins",
@@ -772,20 +859,37 @@ const LABELS_DATA = {
         founders: "DJ Muggs",
         genre: "Underground Hip-hop, Rap occult",
         philosophy: "Dark, spiritual, esoteric hip-hop",
+        distribution: "Indépendant, collaborations limitées",
+        headquarters: "Los Angeles, Californie, USA",
         totalSales: 21250000,
         totalArtists: 7,
         totalAlbums: 28,
         totalRevenue: 61800000,
+        peakRevenue: "Estimé 5M$ (2023)",
         influence: 59,
+        keyFact: "Fondé par DJ Muggs de Cypress Hill. Le label est connu pour ses productions sombres et hardcore, collaborant avec la crème du rap underground américain comme Roc Marciano, Freddie Gibbs, Westside Gunn et MF DOOM.",
         artists: {
-            "DJ MUGGS": { debut: 1997, genre: "Boom bap, rap occult", albums: 15, sales: 800000, revenue: 5000000, roi: 150, influence: 10, success: "Soul Assassins: Ch.1" },
-            "CYPRESS HILL": { debut: 1997, genre: "Hip-hop, rap rock", albums: 3, sales: 18000000, revenue: 40000000, roi: 300, influence: 8, success: "Black Sunday" },
-            "GZA": { debut: 1999, genre: "Hip-hop, rap technique", albums: 1, sales: 2000000, revenue: 10000000, roi: 200, influence: 9, success: "Beneath the Surface" },
-            "ROC MARCIANO": { debut: 2010, genre: "Boom bap, mafioso", albums: 2, sales: 300000, revenue: 2000000, roi: 180, influence: 10, success: "Marcberg (2010)" },
-            "ILL BILL": { debut: 2004, genre: "Hardcore rap, horrorcore", albums: 3, sales: 400000, revenue: 2500000, roi: 160, influence: 9, success: "What's Wrong with Bill" },
-            "PLANET ASIA": { debut: 2001, genre: "Underground hip-hop", albums: 2, sales: 250000, revenue: 1500000, roi: 140, influence: 8, success: "The Pain (2004)" },
-            "FLEE LORD": { debut: 2020, genre: "Boom bap, rap NY", albums: 2, sales: 100000, revenue: 800000, roi: 120, influence: 7, success: "Pray for the Evil 2" }
-        }
+            "DJ MUGGS": { debut: 1997, genre: "Boom bap, rap occult", albums: 15, sales: 800000, revenue: 5000000, roi: 150, influence: 10, success: "Soul Assassins: Ch.1", note: "Fondateur et beatmaker légendaire de Cypress Hill" },
+            "CYPRESS HILL": { debut: 1997, genre: "Hip-hop, rap rock", albums: 3, sales: 18000000, revenue: 40000000, roi: 300, influence: 8, success: "Black Sunday (1993)", note: "18 millions d'albums vendus mondialement. Groupe pionnier du rap rock" },
+            "GZA": { debut: 1999, genre: "Hip-hop, rap technique", albums: 1, sales: 2000000, revenue: 10000000, roi: 200, influence: 9, success: "Beneath the Surface (1999)", note: "Membre du Wu-Tang Clan. Génie lyrique" },
+            "ROC MARCIANO": { debut: 2010, genre: "Boom bap, mafioso rap", albums: 2, sales: 300000, revenue: 2000000, roi: 180, influence: 10, success: "Marcberg (2010)", note: "Figure majeure de la renaissance boom bap" },
+            "ILL BILL": { debut: 2004, genre: "Hardcore rap, horrorcore", albums: 3, sales: 400000, revenue: 2500000, roi: 160, influence: 9, success: "What's Wrong with Bill?", note: "Membre de Non Phixion. Rap politique et hardcore" },
+            "PLANET ASIA": { debut: 2001, genre: "Underground hip-hop", albums: 2, sales: 250000, revenue: 1500000, roi: 140, influence: 8, success: "The Pain (2004)", note: "Lyricist West Coast underground" },
+            "FLEE LORD": { debut: 2020, genre: "Boom bap, rap NY", albums: 2, sales: 100000, revenue: 800000, roi: 120, influence: 7, success: "Pray for the Evil 2", note: "Nouvelle génération, continuité boom bap" }
+        },
+        timeline: [
+            { year: 1997, event: "Fondation par DJ Muggs après Cypress Hill", type: "Structure" },
+            { year: 1997, event: "Sortie de Soul Assassins: Chapter 1", type: "Album" },
+            { year: 1999, event: "Collaboration avec GZA (Wu-Tang)", type: "Collaboration" },
+            { year: 2000, event: "Soul Assassins: Chapter 2", type: "Album" },
+            { year: 2004, event: "Signature d'Ill Bill", type: "Artiste" },
+            { year: 2006, event: "Pause du collectif", type: "Structure" },
+            { year: 2010, event: "Retour avec Roc Marciano", type: "Artiste" },
+            { year: 2013, event: "Dia del Asesinato (album)", type: "Album" },
+            { year: 2020, event: "Signature de Flee Lord", type: "Artiste" },
+            { year: 2023, event: "25 ans d'anniversaire", type: "Événement" },
+            { year: 2024, event: "Soul Assassins 3: Death Valley", type: "Album" }
+        ]
     },
     aftermath: {
         name: "Aftermath Entertainment",
@@ -794,20 +898,38 @@ const LABELS_DATA = {
         founders: "Dr. Dre",
         genre: "Hip-hop premium, Production",
         philosophy: "Quality over quantity, perfectionnisme",
+        distribution: "Interscope Records, Universal Music Group",
+        headquarters: "Los Angeles, Californie, USA",
         totalSales: 325000000,
         totalArtists: 7,
         totalAlbums: 24,
         totalRevenue: 915000000,
+        peakRevenue: "Estimé 100M$ (2003)",
         influence: 65,
+        keyFact: "Fondé par Dr. Dre après son départ de Death Row. Label \"boutique\" privilégiant la qualité sur la quantité. 17 des 26 albums certifiés platine ou plus. A lancé les carrières d'Eminem, Kendrick Lamar et 50 Cent.",
         artists: {
-            "DR. DRE": { debut: 1996, genre: "G-funk, West Coast", albums: 2, sales: 15000000, revenue: 80000000, roi: 600, influence: 10, success: "2001 (1999)" },
-            "EMINEM": { debut: 1998, genre: "Hip-hop, Rap hardcore", albums: 11, sales: 220000000, revenue: 500000000, roi: 1200, influence: 10, success: "Marshall Mathers LP" },
-            "KENDRICK LAMAR": { debut: 2012, genre: "Hip-hop, Rap conscient", albums: 4, sales: 25000000, revenue: 120000000, roi: 800, influence: 10, success: "To Pimp a Butterfly" },
-            "THE GAME": { debut: 2004, genre: "Gangsta rap, West Coast", albums: 3, sales: 8000000, revenue: 40000000, roi: 400, influence: 8, success: "The Documentary" },
-            "50 CENT": { debut: 2002, genre: "Hip-hop, Gangsta rap", albums: 2, sales: 30000000, revenue: 150000000, roi: 1000, influence: 9, success: "Get Rich or Die Tryin'" },
-            "BUSTA RHYMES": { debut: 1998, genre: "Hip-hop, East Coast", albums: 1, sales: 2000000, revenue: 10000000, roi: 200, influence: 8, success: "Extinction Level Event" },
-            "ANDERSON .PAAK": { debut: 2016, genre: "R&B, Soul, Hip-hop", albums: 1, sales: 3000000, revenue: 15000000, roi: 250, influence: 9, success: "Oxnard (2018)" }
-        }
+            "DR. DRE": { debut: 1996, genre: "G-funk, West Coast", albums: 2, sales: 15000000, revenue: 80000000, roi: 600, influence: 10, success: "2001 (1999)", note: "Fondateur. Producteur légendaire. 2001 = 6x platine" },
+            "EMINEM": { debut: 1998, genre: "Hip-hop, Rap hardcore", albums: 11, sales: 220000000, revenue: 500000000, roi: 1200, influence: 10, success: "Marshall Mathers LP", note: "Artiste le plus vendu. The Slim Shady LP = premier succès du label. 2 albums diamant" },
+            "KENDRICK LAMAR": { debut: 2012, genre: "Hip-hop, Rap conscient", albums: 4, sales: 25000000, revenue: 120000000, roi: 800, influence: 10, success: "To Pimp a Butterfly", note: "Premier rappeur à gagner le Prix Pulitzer (DAMN., 2017)" },
+            "THE GAME": { debut: 2004, genre: "Gangsta rap, West Coast", albums: 3, sales: 8000000, revenue: 40000000, roi: 400, influence: 8, success: "The Documentary", note: "A quitté le label en 2006 après tensions avec 50 Cent" },
+            "50 CENT": { debut: 2002, genre: "Hip-hop, Gangsta rap", albums: 2, sales: 30000000, revenue: 150000000, roi: 1000, influence: 9, success: "Get Rich or Die Tryin'", note: "Joint-venture avec Shady Records. Album = 2ème plus rapide de l'histoire US" },
+            "BUSTA RHYMES": { debut: 1998, genre: "Hip-hop, East Coast", albums: 1, sales: 2000000, revenue: 10000000, roi: 200, influence: 8, success: "Extinction Level Event", note: "A quitté le label en 2008 pour conflits avec Interscope" },
+            "ANDERSON .PAAK": { debut: 2016, genre: "R&B, Soul, Hip-hop", albums: 1, sales: 3000000, revenue: 15000000, roi: 250, influence: 9, success: "Oxnard (2018)", note: "Artiste éclectique. Multi-instrumentiste" }
+        },
+        timeline: [
+            { year: 1996, event: "Fondation par Dr. Dre après départ de Death Row", type: "Structure" },
+            { year: 1996, event: "Dr. Dre Presents the Aftermath (compilation)", type: "Album" },
+            { year: 1998, event: "Signature d'Eminem via Jimmy Iovine", type: "Artiste" },
+            { year: 1999, event: "The Slim Shady LP (Eminem) - premier succès majeur", type: "Album" },
+            { year: 1999, event: "2001 (Dr. Dre) - 6x platine", type: "Album" },
+            { year: 2002, event: "Signature de 50 Cent", type: "Artiste" },
+            { year: 2003, event: "Get Rich or Die Tryin' (50 Cent)", type: "Album" },
+            { year: 2005, event: "The Documentary (The Game)", type: "Album" },
+            { year: 2012, event: "good kid, m.A.A.d city (Kendrick Lamar)", type: "Album" },
+            { year: 2015, event: "To Pimp a Butterfly (Kendrick Lamar)", type: "Album" },
+            { year: 2017, event: "DAMN. (Kendrick Lamar) - Prix Pulitzer", type: "Album" },
+            { year: 2024, event: "Snoop Dogg rejoint Aftermath", type: "Artiste" }
+        ]
     },
     shady: {
         name: "Shady Records",
@@ -816,20 +938,38 @@ const LABELS_DATA = {
         founders: "Eminem, Paul Rosenberg",
         genre: "Hip-hop, Rap hardcore",
         philosophy: "Raw talent, lyrical prowess",
+        distribution: "Interscope Records, Universal Music Group",
+        headquarters: "Detroit, Michigan, USA",
         totalSales: 262300000,
         totalArtists: 7,
         totalAlbums: 22,
         totalRevenue: 706000000,
+        peakRevenue: "Estimé 50M$ (2003)",
         influence: 60,
+        keyFact: "Fondé par Eminem et son manager Paul Rosenberg. 10 des 14 albums du label sont certifiés or ou plus. A lancé 50 Cent, D12, Obie Trice et Yelawolf. Radio Shade 45 sur SiriusXM.",
         artists: {
-            "EMINEM": { debut: 1999, genre: "Hip-hop, Horrorcore", albums: 11, sales: 220000000, revenue: 500000000, roi: 1200, influence: 10, success: "Marshall Mathers LP" },
-            "50 CENT": { debut: 2002, genre: "Hip-hop, Gangsta rap", albums: 2, sales: 30000000, revenue: 150000000, roi: 1000, influence: 9, success: "Get Rich or Die Tryin'" },
-            "OBIE TRICE": { debut: 2003, genre: "Hip-hop, Rap hardcore", albums: 3, sales: 2000000, revenue: 10000000, roi: 300, influence: 7, success: "Cheers (2003)" },
-            "CASHIS": { debut: 2006, genre: "Hip-hop, Gangsta rap", albums: 1, sales: 500000, revenue: 3000000, roi: 200, influence: 6, success: "County Hound EP" },
-            "YELAWOLF": { debut: 2011, genre: "Hip-hop, Country rap", albums: 2, sales: 1000000, revenue: 8000000, roi: 250, influence: 7, success: "Radioactive (2011)" },
-            "SLAUGHTERHOUSE": { debut: 2009, genre: "Hip-hop, Rap technique", albums: 1, sales: 800000, revenue: 5000000, roi: 220, influence: 7, success: "Welcome to: Our House" },
-            "D12": { debut: 2001, genre: "Hip-hop, Horrorcore", albums: 2, sales: 6000000, revenue: 30000000, roi: 400, influence: 7, success: "Devil's Night (2001)" }
-        }
+            "EMINEM": { debut: 1999, genre: "Hip-hop, Horrorcore", albums: 11, sales: 220000000, revenue: 500000000, roi: 1200, influence: 10, success: "Marshall Mathers LP", note: "Fondateur. Artiste le plus vendu des années 2000. 2 albums diamant" },
+            "50 CENT": { debut: 2002, genre: "Hip-hop, Gangsta rap", albums: 2, sales: 30000000, revenue: 150000000, roi: 1000, influence: 9, success: "Get Rich or Die Tryin'", note: "Premier artiste signé simultanément chez Shady et Aftermath. Vendu 30M+" },
+            "OBIE TRICE": { debut: 2003, genre: "Hip-hop, Rap hardcore", albums: 3, sales: 2000000, revenue: 10000000, roi: 300, influence: 7, success: "Cheers (2003)", note: "Découvert via D12. Représentant de Detroit" },
+            "CASHIS": { debut: 2006, genre: "Hip-hop, Gangsta rap", albums: 1, sales: 500000, revenue: 3000000, roi: 200, influence: 6, success: "County Hound EP", note: "Signé via G-Unit. Style West Coast" },
+            "YELAWOLF": { debut: 2011, genre: "Hip-hop, Country rap", albums: 2, sales: 1000000, revenue: 8000000, roi: 250, influence: 7, success: "Radioactive (2011)", note: "Fusion hip-hop/country. Artiste éclectique" },
+            "SLAUGHTERHOUSE": { debut: 2009, genre: "Hip-hop, Rap technique", albums: 1, sales: 800000, revenue: 5000000, roi: 220, influence: 7, success: "Welcome to: Our House", note: "Supergroupe lyrique (Joe Budden, Crooked I, Royce, Joell Ortiz)" },
+            "D12": { debut: 2001, genre: "Hip-hop, Horrorcore", albums: 2, sales: 6000000, revenue: 30000000, roi: 400, influence: 7, success: "Devil's Night (2001)", note: "Groupe d'Eminem. 2 albums #1 Billboard. Devil's Night = 2x platine" }
+        },
+        timeline: [
+            { year: 1999, event: "Fondation par Eminem et Paul Rosenberg", type: "Structure" },
+            { year: 2000, event: "Signature de D12", type: "Artiste" },
+            { year: 2001, event: "Devil's Night (D12) - #1 Billboard", type: "Album" },
+            { year: 2002, event: "Signature de 50 Cent", type: "Artiste" },
+            { year: 2003, event: "Get Rich or Die Tryin' (50 Cent)", type: "Album" },
+            { year: 2003, event: "Cheers (Obie Trice)", type: "Album" },
+            { year: 2004, event: "D12 World - 2x platine", type: "Album" },
+            { year: 2006, event: "Eminem Presents: The Re-Up", type: "Album" },
+            { year: 2009, event: "Signature de Slaughterhouse", type: "Artiste" },
+            { year: 2011, event: "Signature de Yelawolf", type: "Artiste" },
+            { year: 2014, event: "Shady XV (compilation 15 ans)", type: "Album" },
+            { year: 2026, event: "D12 Forever Vol. 1 (retour de D12)", type: "Album" }
+        ]
     },
     badboy: {
         name: "Bad Boy Records",
@@ -838,20 +978,37 @@ const LABELS_DATA = {
         founders: "Sean 'Puffy' Combs",
         genre: "Hip-hop, R&B, Pop rap",
         philosophy: "Luxe, glamour, succès commercial",
+        distribution: "Arista Records (1993-2001), Atlantic Records (2001-présent)",
+        headquarters: "New York City, New York, USA",
         totalSales: 66000000,
         totalArtists: 7,
         totalAlbums: 19,
         totalRevenue: 375000000,
+        peakRevenue: "130M$ (une année)",
         influence: 52,
+        keyFact: "Créé via un joint-venture 50/50 de 1.5M$ avec Arista. A dominé les années 90 avec The Notorious B.I.G., Faith Evans, Mase et 112. Pionnier du \"Shiny Suit Era\" et du sampling pop industrialisé.",
         artists: {
-            "P. DIDDY": { debut: 1993, genre: "Hip-hop, R&B, Pop", albums: 6, sales: 25000000, revenue: 150000000, roi: 900, influence: 9, success: "No Way Out (1997)" },
-            "THE NOTORIOUS B.I.G.": { debut: 1994, genre: "Hip-hop, Rap East Coast", albums: 2, sales: 17000000, revenue: 100000000, roi: 1100, influence: 10, success: "Ready to Die" },
-            "MASE": { debut: 1997, genre: "Hip-hop, Pop rap", albums: 2, sales: 5000000, revenue: 25000000, roi: 600, influence: 7, success: "Harlem World" },
-            "LIL' KIM": { debut: 1996, genre: "Hip-hop, Hardcore rap", albums: 1, sales: 6000000, revenue: 30000000, roi: 500, influence: 9, success: "Hard Core (1996)" },
-            "FAITH EVANS": { debut: 1995, genre: "R&B, Soul", albums: 3, sales: 4000000, revenue: 20000000, roi: 400, influence: 7, success: "Faith (1995)" },
-            "TOTAL": { debut: 1995, genre: "R&B, New Jack Swing", albums: 2, sales: 3000000, revenue: 15000000, roi: 300, influence: 6, success: "Total (1996)" },
-            "112": { debut: 1996, genre: "R&B, Hip-hop soul", albums: 3, sales: 8000000, revenue: 40000000, roi: 550, influence: 7, success: "112 (1996)" }
-        }
+            "P. DIDDY": { debut: 1993, genre: "Hip-hop, R&B, Pop", albums: 6, sales: 25000000, revenue: 150000000, roi: 900, influence: 9, success: "No Way Out (1997)", note: "Fondateur. A négocié un deal 50/50 avec Arista. A créé Love Records en 2023" },
+            "THE NOTORIOUS B.I.G.": { debut: 1994, genre: "Hip-hop, Rap East Coast", albums: 2, sales: 17000000, revenue: 100000000, roi: 1100, influence: 10, success: "Ready to Die", note: "Légende du rap East Coast. Ready to Die = 6x platine. Décédé en 1997" },
+            "MASE": { debut: 1997, genre: "Hip-hop, Pop rap", albums: 2, sales: 5000000, revenue: 25000000, roi: 600, influence: 7, success: "Harlem World", note: "Harlem World = 4x platine. S'est retiré pour devenir pasteur" },
+            "LIL' KIM": { debut: 1996, genre: "Hip-hop, Hardcore rap", albums: 1, sales: 6000000, revenue: 30000000, roi: 500, influence: 9, success: "Hard Core (1996)", note: "Pionnière du rap féminin hardcore. Hard Core = 2x platine" },
+            "FAITH EVANS": { debut: 1995, genre: "R&B, Soul", albums: 3, sales: 4000000, revenue: 20000000, roi: 400, influence: 7, success: "Faith (1995)", note: "First Lady de Bad Boy. A épousé The Notorious B.I.G." },
+            "TOTAL": { debut: 1995, genre: "R&B, New Jack Swing", albums: 2, sales: 3000000, revenue: 15000000, roi: 300, influence: 6, success: "Total (1996)", note: "Girl group R&B. Harmonies des années 90" },
+            "112": { debut: 1996, genre: "R&B, Hip-hop soul", albums: 3, sales: 8000000, revenue: 40000000, roi: 550, influence: 7, success: "112 (1996)", note: "Boy band R&B. Room 112 = 2x platine" }
+        },
+        timeline: [
+            { year: 1993, event: "Fondation par Sean Combs via joint-venture 1.5M$ avec Arista", type: "Structure" },
+            { year: 1994, event: "Flava In Ya Ear (Craig Mack) - premier hit", type: "Album" },
+            { year: 1994, event: "Ready to Die (The Notorious B.I.G.)", type: "Album" },
+            { year: 1995, event: "Faith (Faith Evans)", type: "Album" },
+            { year: 1996, event: "Hard Core (Lil' Kim)", type: "Album" },
+            { year: 1997, event: "No Way Out (Puff Daddy) - #1 Billboard", type: "Album" },
+            { year: 1997, event: "Harlem World (Mase) - 4x platine", type: "Album" },
+            { year: 1997, event: "Assassinat de The Notorious B.I.G.", type: "Événement" },
+            { year: 2001, event: "Passage à Atlantic Records", type: "Business" },
+            { year: 2015, event: "Bad Boy Family Reunion", type: "Événement" },
+            { year: 2023, event: "Création de Love Records par Combs", type: "Structure" }
+        ]
     },
     ruthless: {
         name: "Ruthless Records",
@@ -860,19 +1017,35 @@ const LABELS_DATA = {
         founders: "Eazy-E, Jerry Heller",
         genre: "Gangsta rap, West Coast",
         philosophy: "Expression brute de la rue",
+        distribution: "Priority Records (1987-1995), Epic Records (1995-2000)",
+        headquarters: "Compton, Californie, USA",
         totalSales: 30200000,
         totalArtists: 6,
         totalAlbums: 12,
         totalRevenue: 132000000,
+        peakRevenue: "10M$/mois (1995)",
         influence: 50,
+        keyFact: "Fondé par Eazy-E avec 250,000$ (argent de Jerry Heller + contribution Sony/Relativity de 2.25M$). A lancé N.W.A. et le gangsta rap. 110 millions de disques vendus. Straight Outta Compton = premier album platine sans radio.",
         artists: {
-            "EAZY-E": { debut: 1988, genre: "Gangsta rap, West Coast", albums: 3, sales: 5000000, revenue: 25000000, roi: 700, influence: 10, success: "Eazy-Duz-It (1988)" },
-            "N.W.A": { debut: 1988, genre: "Gangsta rap, political", albums: 1, sales: 3000000, revenue: 20000000, roi: 600, influence: 10, success: "Straight Outta Compton" },
-            "BONE THUGS-N-HARMONY": { debut: 1993, genre: "Gangsta rap, melodic", albums: 4, sales: 20000000, revenue: 80000000, roi: 1000, influence: 9, success: "E. 1999 Eternal" },
-            "DRESTA": { debut: 1995, genre: "Gangsta rap, West Coast", albums: 2, sales: 800000, revenue: 4000000, roi: 300, influence: 7, success: "Player of the Year" },
-            "KOKANE": { debut: 1991, genre: "G-funk, gangsta rap", albums: 3, sales: 600000, revenue: 3000000, roi: 250, influence: 7, success: "Addictive Hip Hop Muzick" },
-            "MC REN": { debut: 1989, genre: "Gangsta rap, political", albums: 2, sales: 400000, revenue: 2000000, roi: 200, influence: 7, success: "Kizz My Black Azz" }
-        }
+            "EAZY-E": { debut: 1988, genre: "Gangsta rap, West Coast", albums: 3, sales: 5000000, revenue: 25000000, roi: 700, influence: 10, success: "Eazy-Duz-It (1988)", note: "Fondateur. A découvert N.W.A., Bone Thugs-N-Harmony et J.J. Fad. Décédé en 1995" },
+            "N.W.A": { debut: 1988, genre: "Gangsta rap, political", albums: 1, sales: 3000000, revenue: 20000000, roi: 600, influence: 10, success: "Straight Outta Compton", note: "Pionnier du gangsta rap. Premier album platine sans radio" },
+            "BONE THUGS-N-HARMONY": { debut: 1993, genre: "Gangsta rap, melodic", albums: 4, sales: 20000000, revenue: 80000000, roi: 1000, influence: 9, success: "E. 1999 Eternal", note: "Découverts par Eazy-E à Cleveland. Tha Crossroads = Grammy. 4x platine" },
+            "DRESTA": { debut: 1995, genre: "Gangsta rap, West Coast", albums: 2, sales: 800000, revenue: 4000000, roi: 300, influence: 7, success: "Player of the Year", note: "Artiste West Coast. Collaborateur de longue date" },
+            "KOKANE": { debut: 1991, genre: "G-funk, gangsta rap", albums: 3, sales: 600000, revenue: 3000000, roi: 250, influence: 7, success: "Addictive Hip Hop Muzick", note: "Voix distinctive. Collaborateur de Snoop Dogg" },
+            "MC REN": { debut: 1989, genre: "Gangsta rap, political", albums: 2, sales: 400000, revenue: 2000000, roi: 200, influence: 7, success: "Kizz My Black Azz", note: "Membre de N.W.A. Paroles engagées" }
+        },
+        timeline: [
+            { year: 1987, event: "Fondation par Eazy-E et Jerry Heller", type: "Structure" },
+            { year: 1988, event: "Eazy-Duz-It (Eazy-E) et Straight Outta Compton (N.W.A)", type: "Album" },
+            { year: 1988, event: "J.J. Fad - Supersonic (premier hit du label)", type: "Album" },
+            { year: 1989, event: "Départ d'Ice Cube", type: "Structure" },
+            { year: 1991, event: "Départ de Dr. Dre", type: "Structure" },
+            { year: 1993, event: "Signature de Bone Thugs-N-Harmony", type: "Artiste" },
+            { year: 1995, event: "E. 1999 Eternal (Bone Thugs)", type: "Album" },
+            { year: 1995, event: "Décès d'Eazy-E", type: "Événement" },
+            { year: 1995, event: "Rachat par Epic Records", type: "Business" },
+            { year: 2015, event: "Relance par Tomica Wright (veuve d'Eazy-E)", type: "Structure" }
+        ]
     },
     deathrow: {
         name: "Death Row Records",
@@ -881,19 +1054,35 @@ const LABELS_DATA = {
         founders: "Suge Knight, Dr. Dre, The D.O.C.",
         genre: "West Coast Hip-hop, G-funk",
         philosophy: "Révolutionner le son hip-hop",
+        distribution: "Interscope (1992-1996), Priority (1996-2001)",
+        headquarters: "Los Angeles, Californie, USA",
         totalSales: 34300000,
         totalArtists: 6,
         totalAlbums: 10,
         totalRevenue: 153000000,
+        peakRevenue: "100M$/an (1996)",
         influence: 53,
+        keyFact: "Fondé par Dr. Dre après son départ de Ruthless. A dominé le hip-hop West Coast avec The Chronic, Doggystyle et All Eyez on Me. 150 millions d'albums vendus et 750M$ de revenus. Snoop Dogg a racheté le label en 2022 pour 18M$.",
         artists: {
-            "DR. DRE": { debut: 1992, genre: "G-funk, hip-hop", albums: 2, sales: 7000000, revenue: 45000000, roi: 800, influence: 10, success: "The Chronic (1992)" },
-            "SNOOP DOGG": { debut: 1993, genre: "G-funk, hip-hop", albums: 2, sales: 10000000, revenue: 60000000, roi: 900, influence: 10, success: "Doggystyle (1993)" },
-            "TUPAC SHAKUR": { debut: 1995, genre: "Hip-hop, rap conscient", albums: 2, sales: 12000000, revenue: 80000000, roi: 1100, influence: 10, success: "All Eyez on Me" },
-            "DAZ DILLINGER": { debut: 1996, genre: "G-funk, hip-hop", albums: 2, sales: 1500000, revenue: 8000000, roi: 300, influence: 8, success: "Retaliation, Revenge" },
-            "NATE DOGG": { debut: 1994, genre: "G-funk, hip-hop", albums: 1, sales: 800000, revenue: 4000000, roi: 250, influence: 8, success: "G-Funk Classics" },
-            "WARREN G": { debut: 1994, genre: "G-funk, hip-hop", albums: 1, sales: 3000000, revenue: 15000000, roi: 400, influence: 8, success: "Regulate...G Funk Era" }
-        }
+            "DR. DRE": { debut: 1992, genre: "G-funk, hip-hop", albums: 2, sales: 7000000, revenue: 45000000, roi: 800, influence: 10, success: "The Chronic (1992)", note: "Co-fondateur. The Chronic = 5M+ copies. A quitté en 1996 pour fonder Aftermath" },
+            "SNOOP DOGG": { debut: 1993, genre: "G-funk, hip-hop", albums: 2, sales: 10000000, revenue: 60000000, roi: 900, influence: 10, success: "Doggystyle (1993)", note: "Doggystyle = 11x platine. A racheté Death Row en 2022 pour 18M$" },
+            "TUPAC SHAKUR": { debut: 1995, genre: "Hip-hop, rap conscient", albums: 2, sales: 12000000, revenue: 80000000, roi: 1100, influence: 10, success: "All Eyez on Me", note: "Signé après que Suge Knight ait payé sa caution de 1.4M$. All Eyez on Me = diamant. Décédé en 1996" },
+            "DAZ DILLINGER": { debut: 1996, genre: "G-funk, hip-hop", albums: 2, sales: 1500000, revenue: 8000000, roi: 300, influence: 8, success: "Retaliation, Revenge", note: "Producteur et rappeur. Membre de Tha Dogg Pound" },
+            "NATE DOGG": { debut: 1994, genre: "G-funk, hip-hop", albums: 1, sales: 800000, revenue: 4000000, roi: 250, influence: 8, success: "G-Funk Classics", note: "Voix légendaire du G-funk. Hook master" },
+            "WARREN G": { debut: 1994, genre: "G-funk, hip-hop", albums: 1, sales: 3000000, revenue: 15000000, roi: 400, influence: 8, success: "Regulate...G Funk Era", note: "Demi-frère de Dr. Dre. Regulate = hit mondial" }
+        },
+        timeline: [
+            { year: 1991, event: "Fondation par Suge Knight, Dr. Dre et The D.O.C.", type: "Structure" },
+            { year: 1992, event: "The Chronic (Dr. Dre) - 5M+ copies", type: "Album" },
+            { year: 1993, event: "Doggystyle (Snoop Dogg) - 11x platine", type: "Album" },
+            { year: 1995, event: "Signature de Tupac Shakur", type: "Artiste" },
+            { year: 1996, event: "All Eyez on Me (Tupac) - diamant", type: "Album" },
+            { year: 1996, event: "Décès de Tupac Shakur", type: "Événement" },
+            { year: 1996, event: "Départ de Dr. Dre", type: "Structure" },
+            { year: 1997, event: "Départ de Snoop Dogg", type: "Structure" },
+            { year: 2006, event: "Faillite du label", type: "Business" },
+            { year: 2022, event: "Rachat par Snoop Dogg pour 18M$", type: "Business" }
+        ]
     }
 };
 
@@ -915,7 +1104,6 @@ function formatCurrency(num) {
     return '$' + num;
 }
 
-// Base layout avec marges augmentées pour éviter le chevauchement
 const baseLayout = {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
@@ -923,12 +1111,7 @@ const baseLayout = {
     margin: { t: 55, r: 25, b: 100, l: 60 },
     showlegend: false,
     autosize: true,
-    height: 420,
-    title: {
-        font: { color: '#ffffff', size: 14, weight: 700 },
-        x: 0.02,
-        xanchor: 'left'
-    }
+    height: 420
 };
 
 const axisStyle = {
@@ -938,7 +1121,6 @@ const axisStyle = {
     tickfont: { color: '#a3a3a3', size: 10 }
 };
 
-// Configuration Plotly responsive
 const plotlyConfig = {
     responsive: true,
     displayModeBar: false,
@@ -959,7 +1141,6 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
         tab.classList.add('active');
         document.getElementById(targetId).classList.add('active');
         
-        // Resize all plotly charts in the active tab
         setTimeout(() => {
             const activeTab = document.getElementById(targetId);
             activeTab.querySelectorAll('.js-plotly-plot').forEach(el => {
@@ -976,8 +1157,6 @@ document.querySelectorAll('.nav-tab').forEach(tab => {
 // ============================================================
 // OVERVIEW
 // ============================================================
-
-let overviewRendered = false;
 
 function renderOverview() {
     const totalSales = Object.values(LABELS_DATA).reduce((s, l) => s + l.totalSales, 0);
@@ -1004,7 +1183,7 @@ function renderOverview() {
         <div class="metric-card" style="--accent:#A855F7;">
             <div class="label">💰 Revenus</div>
             <div class="value" style="color:#A855F7;">${formatCurrency(totalRevenue)}</div>
-            <div class="sublabel">CA cumulé</div>
+            <div class="sublabel">CA cumulé estimé</div>
         </div>
     `;
 
@@ -1036,43 +1215,37 @@ function renderOverview() {
     const labels = Object.values(LABELS_DATA);
 
     Plotly.newPlot('overviewSalesChart', [{
-        x: labels.map(l => l.name),
+        x: labels.map(l => l.name.split(' ')[0]),
         y: labels.map(l => l.totalSales / 1e6),
         type: 'bar',
         marker: { color: labels.map(l => l.color), line: { width: 0 } },
         text: labels.map(l => formatNumber(l.totalSales)),
         textposition: 'outside',
-        textfont: { color: '#fff', size: 11, weight: 700 },
-        hovertemplate: '<b>%{x}</b><br>Ventes: %{text}<extra></extra>'
+        textfont: { color: '#fff', size: 11, weight: 700 }
     }], {
         ...baseLayout,
-        title: { text: 'Ventes Totales par Label (Millions)', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
+        title: { text: 'Ventes par Label (Millions)', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
         xaxis: { ...axisStyle, tickfont: { size: 10, color: '#a3a3a3' }, tickangle: -30 },
         yaxis: { ...axisStyle, title: { text: 'Millions', font: { size: 11 } } },
-        margin: { t: 55, r: 25, b: 120, l: 60 },
-        height: 440
+        margin: { t: 55, r: 25, b: 100, l: 60 },
+        height: 400
     }, plotlyConfig);
 
-    Plotly.newPlot('overviewInfluenceChart', [{
-        x: labels.map(l => l.totalArtists),
+    Plotly.newPlot('overviewRevenueChart', [{
+        x: labels.map(l => l.name.split(' ')[0]),
         y: labels.map(l => l.totalRevenue / 1e6),
-        mode: 'markers+text',
-        marker: {
-            size: labels.map(l => Math.max(20, Math.min(60, l.totalSales / 5e6))),
-            color: labels.map(l => l.color),
-            opacity: 0.85,
-            line: { width: 2, color: '#fff' }
-        },
-        text: labels.map(l => l.name.split(' ')[0]),
-        textposition: 'top center',
-        textfont: { color: '#fff', size: 10, weight: 700 },
-        hovertemplate: '<b>%{text}</b><br>Artistes: %{x}<br>Revenus: $%{y:.0f}M<extra></extra>'
+        type: 'bar',
+        marker: { color: labels.map(l => l.color), line: { width: 0 } },
+        text: labels.map(l => formatCurrency(l.totalRevenue)),
+        textposition: 'outside',
+        textfont: { color: '#fff', size: 11, weight: 700 }
     }], {
         ...baseLayout,
-        title: { text: 'Artistes vs Revenus (Taille = Ventes)', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
-        xaxis: { ...axisStyle, title: { text: "Nombre d'artistes", font: { size: 11 } } },
-        yaxis: { ...axisStyle, title: { text: 'Revenus (M$)', font: { size: 11 } } },
-        height: 440
+        title: { text: 'Revenus par Label (Millions $)', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
+        xaxis: { ...axisStyle, tickfont: { size: 10, color: '#a3a3a3' }, tickangle: -30 },
+        yaxis: { ...axisStyle, title: { text: 'Millions $', font: { size: 11 } } },
+        margin: { t: 55, r: 25, b: 100, l: 60 },
+        height: 400
     }, plotlyConfig);
 
     const allEvents = Object.entries(LABELS_DATA).map(([key, label]) => ({
@@ -1092,14 +1265,13 @@ function renderOverview() {
         },
         text: allEvents.map(e => e.label.split(' ')[0]),
         textposition: allEvents.map((e, i) => (i % 2 === 0) ? 'top center' : 'bottom center'),
-        textfont: { color: '#fff', size: 11, weight: 700 },
-        hovertemplate: '<b>%{text}</b><br>Fondé en %{x}<extra></extra>'
+        textfont: { color: '#fff', size: 11, weight: 700 }
     }], {
         ...baseLayout,
         title: { text: 'Chronologie des Fondations', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
         xaxis: { ...axisStyle, title: { text: 'Année', font: { size: 11 } }, range: [1980, 2028] },
         yaxis: { showticklabels: false, showgrid: false, range: [0.3, 2.7], zeroline: false },
-        height: 340
+        height: 320
     }, plotlyConfig);
 }
 
@@ -1124,8 +1296,6 @@ function switchToTab(tabId) {
 // ============================================================
 // LABEL TABS
 // ============================================================
-
-const renderedTabs = new Set();
 
 function renderLabelTab(labelKey) {
     const label = LABELS_DATA[labelKey];
@@ -1154,6 +1324,34 @@ function renderLabelTab(labelKey) {
         </div>
     `;
 
+    // Info Cards
+    document.getElementById(prefix + 'Info').innerHTML = `
+        <div class="info-card">
+            <div class="info-label">🏢 Fondation</div>
+            <div class="info-value">${label.founded}</div>
+            <div class="info-detail">Fondé par ${label.founders}</div>
+        </div>
+        <div class="info-card">
+            <div class="info-label">🎵 Genre Principal</div>
+            <div class="info-value">${label.genre}</div>
+            <div class="info-detail">${label.philosophy}</div>
+        </div>
+        <div class="info-card">
+            <div class="info-label">📍 Siège</div>
+            <div class="info-value">${label.headquarters}</div>
+            <div class="info-detail">Distribution: ${label.distribution}</div>
+        </div>
+        <div class="info-card">
+            <div class="info-label">📈 Pic de Revenus</div>
+            <div class="info-value">${label.peakRevenue}</div>
+            <div class="info-detail">Influence globale: ${label.influence}/70</div>
+        </div>
+        <div class="info-card" style="grid-column: 1 / -1;">
+            <div class="info-label">💡 Fait Marquand</div>
+            <div class="info-value" style="font-size: 0.95rem; line-height: 1.5;">${label.keyFact}</div>
+        </div>
+    `;
+
     const artistNames = Object.keys(label.artists);
     const artistSales = artistNames.map(a => label.artists[a].sales / 1e6);
     const artistColors = artistNames.map((_, i) => {
@@ -1168,8 +1366,7 @@ function renderLabelTab(labelKey) {
         marker: { color: artistColors, line: { width: 0 } },
         text: artistSales.map(s => s >= 1 ? s.toFixed(1) + 'M' : (s * 1000).toFixed(0) + 'K'),
         textposition: 'outside',
-        textfont: { color: '#fff', size: 10, weight: 700 },
-        hovertemplate: '<b>%{x}</b><br>Ventes: %{text}<extra></extra>'
+        textfont: { color: '#fff', size: 10, weight: 700 }
     }], {
         ...baseLayout,
         title: { text: 'Ventes par Artiste (Millions)', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
@@ -1189,8 +1386,7 @@ function renderLabelTab(labelKey) {
             mode: 'lines+markers',
             name: 'ROI (%)',
             line: { color: label.color, width: 3 },
-            marker: { size: 9, color: label.color, line: { width: 2, color: '#fff' } },
-            hovertemplate: '<b>%{x}</b><br>ROI: %{y}%<extra></extra>'
+            marker: { size: 9, color: label.color, line: { width: 2, color: '#fff' } }
         },
         {
             x: artistNames,
@@ -1198,8 +1394,7 @@ function renderLabelTab(labelKey) {
             mode: 'lines+markers',
             name: 'Influence (x100)',
             line: { color: '#60A5FA', width: 3, dash: 'dot' },
-            marker: { size: 9, color: '#60A5FA', line: { width: 2, color: '#fff' } },
-            hovertemplate: '<b>%{x}</b><br>Influence: %{y}/100<extra></extra>'
+            marker: { size: 9, color: '#60A5FA', line: { width: 2, color: '#fff' } }
         }
     ], {
         ...baseLayout,
@@ -1231,6 +1426,7 @@ function renderLabelTab(labelKey) {
                     <th>Revenus</th>
                     <th>ROI</th>
                     <th>Influence</th>
+                    <th>Note</th>
                 </tr>
             </thead>
             <tbody>
@@ -1245,56 +1441,23 @@ function renderLabelTab(labelKey) {
                         <td>${formatCurrency(art.revenue)}</td>
                         <td>${art.roi}%</td>
                         <td>${art.influence}/10</td>
+                        <td style="font-size:0.8rem; color:#a3a3a3; max-width:200px; white-space:normal;">${art.note}</td>
                     </tr>`;
                 }).join('')}
             </tbody>
         </table>
     `;
 
-    const artistAlbums = artistNames.map(a => label.artists[a].albums);
-    const artistRevenue = artistNames.map(a => label.artists[a].revenue / 1e6);
-
-    Plotly.newPlot(prefix + 'ProductionChart', [{
-        x: artistNames,
-        y: artistAlbums,
-        type: 'bar',
-        marker: { color: label.color, opacity: 0.85, line: { width: 0 } },
-        text: artistAlbums,
-        textposition: 'outside',
-        textfont: { color: '#fff', size: 10, weight: 700 },
-        hovertemplate: '<b>%{x}</b><br>Albums: %{y}<extra></extra>'
-    }], {
-        ...baseLayout,
-        title: { text: 'Albums par Artiste', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
-        xaxis: { ...axisStyle, tickfont: { size: 9, color: '#a3a3a3' }, tickangle: -35 },
-        yaxis: { ...axisStyle, title: { text: 'Albums', font: { size: 11 } } },
-        margin: { t: 55, r: 25, b: 130, l: 60 },
-        height: 440
-    }, plotlyConfig);
-
-    Plotly.newPlot(prefix + 'MarketingChart', [{
-        x: artistRevenue,
-        y: artistInfluence,
-        mode: 'markers+text',
-        marker: {
-            size: artistNames.map(a => Math.max(15, Math.min(50, label.artists[a].albums * 4))),
-            color: artistColors,
-            opacity: 0.85,
-            line: { width: 2, color: '#fff' }
-        },
-        text: artistNames.map(a => a.split(' ')[0]),
-        textposition: 'top center',
-        textfont: { color: '#fff', size: 9, weight: 700 },
-        hovertemplate: '<b>%{text}</b><br>Revenus: $%{x:.1f}M<br>Influence: %{y}/100<extra></extra>'
-    }], {
-        ...baseLayout,
-        title: { text: 'Revenus vs Influence', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
-        xaxis: { ...axisStyle, title: { text: 'Revenus (M$)', font: { size: 11 } } },
-        yaxis: { ...axisStyle, title: { text: 'Influence (x100)', font: { size: 11 } } },
-        height: 440
-    }, plotlyConfig);
-    
-    renderedTabs.add(labelKey);
+    // Timeline
+    document.getElementById(prefix + 'Timeline').innerHTML = label.timeline.map(item => `
+        <div class="timeline-item">
+            <div class="timeline-year" style="color:${label.color}">${item.year}</div>
+            <div class="timeline-content">
+                <span class="event-type" style="background:${label.color}20; color:${label.color}; border:1px solid ${label.color}40;">${item.type}</span>
+                ${item.event}
+            </div>
+        </div>
+    `).join('');
 }
 
 // ============================================================
@@ -1330,6 +1493,13 @@ function updateComparator() {
         l2.totalRevenue / maxVals['Revenus'] * 100,
         l2.influence / maxVals['Influence'] * 100
     ];
+
+    function hexToRgba(hex, alpha) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
 
     Plotly.newPlot('compareRadarChart', [
         {
@@ -1395,8 +1565,7 @@ function updateComparator() {
             marker: { color: l1.color, opacity: 0.85, line: { width: 0 } },
             text: [formatNumber(l1.totalSales), l1.totalArtists, l1.totalAlbums, formatCurrency(l1.totalRevenue), l1.influence],
             textposition: 'outside',
-            textfont: { color: '#fff', size: 10, weight: 700 },
-            hovertemplate: '<b>%{x}</b><br>%{text}<extra></extra>'
+            textfont: { color: '#fff', size: 10, weight: 700 }
         },
         {
             x: categories,
@@ -1406,8 +1575,7 @@ function updateComparator() {
             marker: { color: l2.color, opacity: 0.85, line: { width: 0 } },
             text: [formatNumber(l2.totalSales), l2.totalArtists, l2.totalAlbums, formatCurrency(l2.totalRevenue), l2.influence],
             textposition: 'outside',
-            textfont: { color: '#fff', size: 10, weight: 700 },
-            hovertemplate: '<b>%{x}</b><br>%{text}<extra></extra>'
+            textfont: { color: '#fff', size: 10, weight: 700 }
         }
     ], {
         ...baseLayout,
@@ -1430,41 +1598,18 @@ function updateComparator() {
         height: 460
     }, plotlyConfig);
 
-    const events = [
-        { year: l1.founded, name: l1.name, color: l1.color, y: 2 },
-        { year: l2.founded, name: l2.name, color: l2.color, y: 1 }
-    ];
-
-    Plotly.newPlot('compareTimelineChart', [{
-        x: events.map(e => e.year),
-        y: events.map(e => e.y),
-        mode: 'markers+text',
-        marker: {
-            size: 28,
-            color: events.map(e => e.color),
-            line: { width: 3, color: '#fff' }
-        },
-        text: events.map(e => `<b>${e.name}</b><br>${e.year}`),
-        textposition: 'top center',
-        textfont: { color: '#fff', size: 12 },
-        hovertemplate: '%{text}<extra></extra>'
-    }], {
-        ...baseLayout,
-        title: { text: 'Chronologie Comparative', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
-        xaxis: { ...axisStyle, title: { text: 'Année', font: { size: 11 } }, range: [Math.min(l1.founded, l2.founded) - 5, Math.max(l1.founded, l2.founded) + 5] },
-        yaxis: { showticklabels: false, showgrid: false, range: [0.3, 2.7], zeroline: false },
-        height: 320
-    }, plotlyConfig);
-
     const metrics = [
         { label: 'Fondation', v1: l1.founded, v2: l2.founded },
         { label: 'Fondateurs', v1: l1.founders, v2: l2.founders },
         { label: 'Genre', v1: l1.genre, v2: l2.genre },
         { label: 'Philosophie', v1: l1.philosophy, v2: l2.philosophy },
+        { label: 'Siège', v1: l1.headquarters, v2: l2.headquarters },
+        { label: 'Distribution', v1: l1.distribution, v2: l2.distribution },
         { label: 'Ventes Totales', v1: formatNumber(l1.totalSales), v2: formatNumber(l2.totalSales) },
         { label: 'Artistes', v1: l1.totalArtists, v2: l2.totalArtists },
         { label: 'Albums', v1: l1.totalAlbums, v2: l2.totalAlbums },
         { label: 'Revenus', v1: formatCurrency(l1.totalRevenue), v2: formatCurrency(l2.totalRevenue) },
+        { label: 'Pic de Revenus', v1: l1.peakRevenue, v2: l2.peakRevenue },
         { label: 'Influence', v1: l1.influence + '/70', v2: l2.influence + '/70' },
         { label: 'Ratio Revenus/Ventes', v1: (l1.totalRevenue / l1.totalSales * 100).toFixed(1) + '%', v2: (l2.totalRevenue / l2.totalSales * 100).toFixed(1) + '%' },
         { label: 'Revenus par Artiste', v1: formatCurrency(l1.totalRevenue / l1.totalArtists), v2: formatCurrency(l2.totalRevenue / l2.totalArtists) }
@@ -1492,38 +1637,14 @@ function updateComparator() {
     `;
 }
 
-function hexToRgba(hex, alpha) {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
 // ============================================================
 // INITIALIZATION
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', () => {
     renderOverview();
-    
-    // Pre-render all label tabs in background for instant switching
-    Object.keys(LABELS_DATA).forEach(key => {
-        const tabEl = document.getElementById(key);
-        // Only render if tab is currently active
-        if (tabEl && tabEl.classList.contains('active')) {
-            renderLabelTab(key);
-        }
-    });
-    
-    // Render active tab on first load
-    const activeTab = document.querySelector('.tab-content.active');
-    if (activeTab && activeTab.id !== 'overview' && LABELS_DATA[activeTab.id]) {
-        renderLabelTab(activeTab.id);
-    }
-    
     updateComparator();
     
-    // Handle window resize for responsive charts
     let resizeTimeout;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
@@ -1534,15 +1655,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 150);
     });
 });
-
-// Re-render label tabs when they become active
-const originalSwitchToTab = switchToTab;
-switchToTab = function(tabId) {
-    originalSwitchToTab(tabId);
-    if (LABELS_DATA[tabId] && !renderedTabs.has(tabId)) {
-        renderLabelTab(tabId);
-    }
-};
 </script>
 
 </body>
