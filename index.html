@@ -3,23 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hip-Hop Labels - Dashboard Stratégique Enrichi</title>
+    <title>Hip-Hop Labels - Dashboard Comparatif USA</title>
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --defjam: #FF3B3B;
-            --soulassassins: #A855F7;
-            --aftermath: #FFD700;
-            --shady: #22C55E;
-            --badboy: #D4D4D4;
-            --ruthless: #FBBF24;
-            --deathrow: #EF4444;
+            /* Couleurs du drapeau américain */
+            --usa-red: #B22234;
+            --usa-red-light: #D64550;
+            --usa-white: #FFFFFF;
+            --usa-blue: #3C3B6E;
+            --usa-blue-light: #5A5A9E;
+            --usa-blue-dark: #2A2952;
+            
             --bg-dark: #0a0a0a;
             --bg-card: #141414;
             --bg-card2: #1e1e1e;
@@ -42,34 +39,59 @@
         .main-header {
             text-align: center;
             padding: 2.5rem 1rem 2rem;
-            background: radial-gradient(ellipse at top, #1a1a1a 0%, #0a0a0a 70%);
-            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, var(--usa-blue-dark) 0%, var(--usa-red) 50%, var(--usa-blue-dark) 100%);
+            border-bottom: 4px solid var(--usa-white);
             position: relative;
+            overflow: hidden;
+        }
+
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 20px,
+                    rgba(255,255,255,0.03) 20px,
+                    rgba(255,255,255,0.03) 40px
+                );
+            pointer-events: none;
         }
 
         .main-header h1 {
             font-size: clamp(1.5rem, 4vw, 2.75rem);
             font-weight: 900;
-            background: linear-gradient(90deg, #FF3B3B, #FFD700, #22C55E, #A855F7, #FF3B3B);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--usa-white);
             text-transform: uppercase;
             letter-spacing: 3px;
-            animation: gradientShift 6s linear infinite;
             margin-bottom: 0.5rem;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% center; }
-            100% { background-position: 200% center; }
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            position: relative;
         }
 
         .main-header p {
-            color: var(--text-secondary);
+            color: rgba(255,255,255,0.85);
             font-size: 0.95rem;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            position: relative;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .stars-decoration {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 0.75rem;
+            position: relative;
+        }
+
+        .star {
+            color: var(--usa-white);
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
 
         /* ============ NAVIGATION ============ */
@@ -79,7 +101,7 @@
             gap: 6px;
             padding: 1rem 1.5rem;
             background: var(--bg-card);
-            border-bottom: 1px solid var(--border);
+            border-bottom: 2px solid var(--usa-blue);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -106,13 +128,15 @@
         .nav-tab:hover {
             background: var(--bg-card3);
             color: var(--text);
+            border-color: var(--usa-red);
             transform: translateY(-1px);
         }
 
         .nav-tab.active {
-            background: #ffffff;
-            color: #000000;
-            border-color: #ffffff;
+            background: linear-gradient(135deg, var(--usa-blue) 0%, var(--usa-blue-dark) 100%);
+            color: var(--usa-white);
+            border-color: var(--usa-blue-light);
+            box-shadow: 0 0 15px rgba(60, 59, 110, 0.5);
         }
 
         .nav-tab .dot {
@@ -135,9 +159,7 @@
             animation: fadeIn 0.3s ease;
         }
 
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content.active { display: block; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
@@ -152,13 +174,8 @@
             margin-bottom: 2rem;
         }
 
-        @media (max-width: 900px) {
-            .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-        }
-
-        @media (max-width: 500px) {
-            .metrics-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 900px) { .metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 500px) { .metrics-grid { grid-template-columns: 1fr; } }
 
         .metric-card {
             background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-card2) 100%);
@@ -174,11 +191,9 @@
         .metric-card::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--accent, var(--defjam));
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: var(--accent, var(--usa-red));
         }
 
         .metric-card:hover {
@@ -230,10 +245,8 @@
         .label-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
+            top: 0; left: 0;
+            width: 100%; height: 4px;
             background: var(--accent);
             transition: height 0.25s ease;
         }
@@ -244,9 +257,7 @@
             border-color: var(--border-light);
         }
 
-        .label-card:hover::before {
-            height: 6px;
-        }
+        .label-card:hover::before { height: 6px; }
 
         .label-card h3 {
             font-size: 1.15rem;
@@ -297,9 +308,7 @@
             margin-bottom: 1.5rem;
         }
 
-        @media (max-width: 1100px) {
-            .charts-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 1100px) { .charts-grid { grid-template-columns: 1fr; } }
 
         .chart-container {
             background: var(--bg-card);
@@ -310,9 +319,7 @@
             min-width: 0;
         }
 
-        .chart-container .plotly-graph-div {
-            width: 100% !important;
-        }
+        .chart-container .plotly-graph-div { width: 100% !important; }
 
         /* ============ SECTION TITLES ============ */
         .section-title {
@@ -320,20 +327,21 @@
             font-weight: 800;
             padding: 0.75rem 0;
             margin: 2rem 0 1rem 0;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 2px solid var(--usa-red);
             display: flex;
             align-items: center;
             gap: 0.6rem;
             letter-spacing: 0.5px;
         }
 
+        .section-title.blue { border-bottom-color: var(--usa-blue); }
+
         .subsection-title {
             font-size: 1rem;
             font-weight: 700;
-            border-left: 3px solid var(--accent, var(--defjam));
+            border-left: 3px solid var(--usa-red);
             padding-left: 0.85rem;
             margin: 1.5rem 0 0.75rem 0;
-            color: var(--text);
         }
 
         /* ============ INFO CARDS ============ */
@@ -352,9 +360,7 @@
             transition: border-color 0.2s;
         }
 
-        .info-card:hover {
-            border-color: var(--border-light);
-        }
+        .info-card:hover { border-color: var(--usa-red); }
 
         .info-card .info-label {
             font-size: 0.7rem;
@@ -395,15 +401,15 @@
         }
 
         .artist-table th {
-            background: var(--bg-card2);
+            background: linear-gradient(135deg, var(--usa-blue-dark) 0%, var(--usa-blue) 100%);
             padding: 0.85rem 1rem;
             text-align: left;
             font-weight: 700;
-            color: var(--text-secondary);
+            color: var(--usa-white);
             text-transform: uppercase;
             font-size: 0.7rem;
             letter-spacing: 1px;
-            border-bottom: 2px solid var(--border);
+            border-bottom: 2px solid var(--usa-red);
             white-space: nowrap;
         }
 
@@ -413,18 +419,9 @@
             white-space: nowrap;
         }
 
-        .artist-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .artist-table tr:hover {
-            background: rgba(255,255,255,0.03);
-        }
-
-        .artist-table .artist-name {
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
+        .artist-table tr:last-child td { border-bottom: none; }
+        .artist-table tr:hover { background: rgba(178, 34, 52, 0.08); }
+        .artist-table .artist-name { font-weight: 700; letter-spacing: 0.3px; }
 
         /* ============ TIMELINE ============ */
         .timeline-list {
@@ -443,13 +440,12 @@
             border-bottom: 1px solid rgba(255,255,255,0.04);
         }
 
-        .timeline-item:last-child {
-            border-bottom: none;
-        }
+        .timeline-item:last-child { border-bottom: none; }
 
         .timeline-year {
             font-weight: 800;
             font-size: 1rem;
+            color: var(--usa-red);
         }
 
         .timeline-content {
@@ -467,32 +463,31 @@
             letter-spacing: 0.5px;
             margin-right: 0.5rem;
             vertical-align: middle;
+            background: rgba(60, 59, 110, 0.3);
+            color: var(--usa-blue-light);
+            border: 1px solid rgba(60, 59, 110, 0.5);
         }
 
         /* ============ COMPARATOR ============ */
         .comparator-section {
             background: linear-gradient(145deg, #0f0f0f 0%, #1a1a1a 100%);
-            border: 1px solid var(--border);
+            border: 2px solid var(--usa-blue);
             border-radius: 16px;
             padding: 1.75rem;
             margin-bottom: 2rem;
         }
 
-        .comparator-header {
-            margin-bottom: 1.5rem;
-        }
+        .comparator-header { margin-bottom: 1.5rem; }
 
         .comparator-header h2 {
             font-size: 1.4rem;
             font-weight: 800;
             margin-bottom: 0.4rem;
             letter-spacing: 0.5px;
+            color: var(--usa-white);
         }
 
-        .comparator-header p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
+        .comparator-header p { color: var(--text-secondary); font-size: 0.9rem; }
 
         .comparator-controls {
             display: grid;
@@ -507,10 +502,7 @@
         }
 
         @media (max-width: 800px) {
-            .comparator-controls {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-            }
+            .comparator-controls { grid-template-columns: 1fr; gap: 0.75rem; }
         }
 
         .comparator-controls .control-group {
@@ -540,14 +532,8 @@
             font-family: inherit;
         }
 
-        .comparator-controls select:hover {
-            border-color: var(--border-light);
-        }
-
-        .comparator-controls select:focus {
-            outline: none;
-            border-color: var(--aftermath);
-        }
+        .comparator-controls select:hover { border-color: var(--border-light); }
+        .comparator-controls select:focus { outline: none; border-color: var(--usa-red); }
 
         .vs-badge {
             display: flex;
@@ -555,28 +541,60 @@
             justify-content: center;
             font-size: 1.1rem;
             font-weight: 900;
-            color: var(--text-secondary);
+            color: var(--usa-red);
             padding: 0.75rem;
         }
 
         .compare-btn {
             padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, #FFD700, #F59E0B);
+            background: linear-gradient(135deg, var(--usa-red) 0%, #8B1A2B 100%);
             border: none;
             border-radius: 8px;
             font-weight: 800;
             cursor: pointer;
-            color: #000;
+            color: var(--usa-white);
             font-size: 0.9rem;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             transition: all 0.2s ease;
             font-family: inherit;
             white-space: nowrap;
+            text-transform: uppercase;
         }
 
         .compare-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 8px 20px rgba(178, 34, 52, 0.4);
+        }
+
+        /* ============ STATS BANNER ============ */
+        .stats-banner {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--usa-blue-dark) 0%, var(--usa-red) 100%);
+            border-radius: 14px;
+            margin-bottom: 2rem;
+            border: 2px solid var(--usa-white);
+        }
+
+        .stats-banner .banner-stat {
+            text-align: center;
+        }
+
+        .stats-banner .banner-stat .num {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--usa-white);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .stats-banner .banner-stat .lbl {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.25rem;
         }
 
         /* ============ FOOTER ============ */
@@ -584,58 +602,74 @@
             text-align: center;
             padding: 2rem 1rem;
             margin-top: 3rem;
-            border-top: 1px solid var(--border);
+            border-top: 3px solid var(--usa-red);
             color: var(--text-secondary);
             font-size: 0.85rem;
+            background: linear-gradient(180deg, transparent 0%, var(--usa-blue-dark) 100%);
         }
 
         .footer .title {
             font-weight: 800;
             font-size: 1rem;
-            color: var(--text);
+            color: var(--usa-white);
             margin-bottom: 0.35rem;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .footer .flags {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin: 0.75rem 0;
+        }
+
+        .footer .flag-stripe {
+            width: 30px;
+            height: 4px;
+            border-radius: 2px;
         }
 
         /* ============ SCROLLBAR ============ */
         ::-webkit-scrollbar { width: 10px; height: 10px; }
         ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 5px; }
-        ::-webkit-scrollbar-thumb:hover { background: #444; }
+        ::-webkit-scrollbar-thumb { background: var(--usa-blue); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--usa-blue-light); }
 
         /* ============ PLOTLY OVERRIDES ============ */
         .js-plotly-plot .plotly .modebar {
             background-color: rgba(20, 20, 20, 0.9) !important;
             border-radius: 6px;
         }
-
-        .js-plotly-plot .plotly .modebar-btn path {
-            fill: #888 !important;
-        }
-
-        .js-plotly-plot .plotly .modebar-btn:hover path {
-            fill: #fff !important;
-        }
+        .js-plotly-plot .plotly .modebar-btn path { fill: #888 !important; }
+        .js-plotly-plot .plotly .modebar-btn:hover path { fill: #fff !important; }
     </style>
 </head>
 <body>
 
 <!-- Header -->
 <header class="main-header">
-    <h1>🎤 Hip-Hop Labels</h1>
-    <p>Dashboard Stratégique Enrichi • 7 Labels Légendaires • Données Détaillées 1984-2024</p>
+    <h1>🇺🇸 Hip-Hop Labels USA</h1>
+    <p>Dashboard Stratégique Comparatif • 7 Labels Légendaires</p>
+    <div class="stars-decoration">
+        <span class="star">★</span>
+        <span class="star">★</span>
+        <span class="star">★</span>
+        <span class="star">★</span>
+        <span class="star">★</span>
+    </div>
 </header>
 
 <!-- Navigation -->
 <nav class="nav-tabs" id="navTabs">
     <button class="nav-tab active" data-tab="overview">📊 Vue d'ensemble</button>
-    <button class="nav-tab" data-tab="defjam"><span class="dot" style="background:#FF3B3B"></span> Def Jam</button>
-    <button class="nav-tab" data-tab="soulassassins"><span class="dot" style="background:#A855F7"></span> Soul Assassins</button>
-    <button class="nav-tab" data-tab="aftermath"><span class="dot" style="background:#FFD700"></span> Aftermath</button>
-    <button class="nav-tab" data-tab="shady"><span class="dot" style="background:#22C55E"></span> Shady</button>
-    <button class="nav-tab" data-tab="badboy"><span class="dot" style="background:#D4D4D4"></span> Bad Boy</button>
-    <button class="nav-tab" data-tab="ruthless"><span class="dot" style="background:#FBBF24"></span> Ruthless</button>
-    <button class="nav-tab" data-tab="deathrow"><span class="dot" style="background:#EF4444"></span> Death Row</button>
+    <button class="nav-tab" data-tab="defjam"><span class="dot" style="background:#B22234"></span> Def Jam</button>
+    <button class="nav-tab" data-tab="soulassassins"><span class="dot" style="background:#3C3B6E"></span> Soul Assassins</button>
+    <button class="nav-tab" data-tab="aftermath"><span class="dot" style="background:#B22234"></span> Aftermath</button>
+    <button class="nav-tab" data-tab="shady"><span class="dot" style="background:#3C3B6E"></span> Shady</button>
+    <button class="nav-tab" data-tab="badboy"><span class="dot" style="background:#B22234"></span> Bad Boy</button>
+    <button class="nav-tab" data-tab="ruthless"><span class="dot" style="background:#3C3B6E"></span> Ruthless</button>
+    <button class="nav-tab" data-tab="deathrow"><span class="dot" style="background:#B22234"></span> Death Row</button>
     <button class="nav-tab" data-tab="comparator">⚖️ Comparateur</button>
 </nav>
 
@@ -644,110 +678,150 @@
 
     <!-- OVERVIEW -->
     <div class="tab-content active" id="overview">
+        <div class="stats-banner" id="overviewBanner"></div>
         <div class="metrics-grid" id="overviewMetrics"></div>
         <div class="label-cards" id="labelCards"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="overviewSalesChart"></div></div>
             <div class="chart-container"><div id="overviewRevenueChart"></div></div>
         </div>
+        <div class="charts-grid">
+            <div class="chart-container"><div id="overviewInfluenceChart"></div></div>
+            <div class="chart-container"><div id="overviewEfficiencyChart"></div></div>
+        </div>
         <div class="chart-container"><div id="overviewTimelineChart"></div></div>
     </div>
 
     <!-- DEF JAM -->
     <div class="tab-content" id="defjam">
+        <div class="stats-banner" id="defjamBanner"></div>
         <div class="metrics-grid" id="defjamMetrics"></div>
         <div class="info-grid" id="defjamInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="defjamArtistsChart"></div></div>
             <div class="chart-container"><div id="defjamROIChart"></div></div>
         </div>
-        <div class="section-title" style="color:#FF3B3B">👑 Artistes Légendaires</div>
+        <div class="charts-grid">
+            <div class="chart-container"><div id="defjamRevenueChart"></div></div>
+            <div class="chart-container"><div id="defjamBubbleChart"></div></div>
+        </div>
+        <div class="section-title">👑 Artistes Légendaires</div>
         <div class="table-wrapper" id="defjamArtistTable"></div>
-        <div class="section-title" style="color:#FF3B3B">📜 Chronologie</div>
+        <div class="section-title blue">📜 Chronologie</div>
         <div class="timeline-list" id="defjamTimeline"></div>
     </div>
 
     <!-- SOUL ASSASSINS -->
     <div class="tab-content" id="soulassassins">
+        <div class="stats-banner" id="soulassassinsBanner"></div>
         <div class="metrics-grid" id="soulassassinsMetrics"></div>
         <div class="info-grid" id="soulassassinsInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="soulassassinsArtistsChart"></div></div>
             <div class="chart-container"><div id="soulassassinsROIChart"></div></div>
         </div>
-        <div class="section-title" style="color:#A855F7">💀 Artistes Underground</div>
+        <div class="charts-grid">
+            <div class="chart-container"><div id="soulassassinsRevenueChart"></div></div>
+            <div class="chart-container"><div id="soulassassinsBubbleChart"></div></div>
+        </div>
+        <div class="section-title">💀 Artistes Underground</div>
         <div class="table-wrapper" id="soulassassinsArtistTable"></div>
-        <div class="section-title" style="color:#A855F7">📜 Chronologie</div>
+        <div class="section-title blue">📜 Chronologie</div>
         <div class="timeline-list" id="soulassassinsTimeline"></div>
     </div>
 
     <!-- AFTERMATH -->
     <div class="tab-content" id="aftermath">
+        <div class="stats-banner" id="aftermathBanner"></div>
         <div class="metrics-grid" id="aftermathMetrics"></div>
         <div class="info-grid" id="aftermathInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="aftermathArtistsChart"></div></div>
             <div class="chart-container"><div id="aftermathROIChart"></div></div>
         </div>
-        <div class="section-title" style="color:#FFD700">🎧 Artistes Premium</div>
+        <div class="charts-grid">
+            <div class="chart-container"><div id="aftermathRevenueChart"></div></div>
+            <div class="chart-container"><div id="aftermathBubbleChart"></div></div>
+        </div>
+        <div class="section-title">🎧 Artistes Premium</div>
         <div class="table-wrapper" id="aftermathArtistTable"></div>
-        <div class="section-title" style="color:#FFD700">📜 Chronologie</div>
+        <div class="section-title blue">📜 Chronologie</div>
         <div class="timeline-list" id="aftermathTimeline"></div>
     </div>
 
     <!-- SHADY -->
     <div class="tab-content" id="shady">
+        <div class="stats-banner" id="shadyBanner"></div>
         <div class="metrics-grid" id="shadyMetrics"></div>
         <div class="info-grid" id="shadyInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="shadyArtistsChart"></div></div>
             <div class="chart-container"><div id="shadyROIChart"></div></div>
         </div>
-        <div class="section-title" style="color:#22C55E">👻 Artistes Shady</div>
+        <div class="charts-grid">
+            <div class="chart-container"><div id="shadyRevenueChart"></div></div>
+            <div class="chart-container"><div id="shadyBubbleChart"></div></div>
+        </div>
+        <div class="section-title">👻 Artistes Shady</div>
         <div class="table-wrapper" id="shadyArtistTable"></div>
-        <div class="section-title" style="color:#22C55E">📜 Chronologie</div>
+        <div class="section-title blue">📜 Chronologie</div>
         <div class="timeline-list" id="shadyTimeline"></div>
     </div>
 
     <!-- BAD BOY -->
     <div class="tab-content" id="badboy">
+        <div class="stats-banner" id="badboyBanner"></div>
         <div class="metrics-grid" id="badboyMetrics"></div>
         <div class="info-grid" id="badboyInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="badboyArtistsChart"></div></div>
             <div class="chart-container"><div id="badboyROIChart"></div></div>
         </div>
-        <div class="section-title" style="color:#D4D4D4">👑 Artistes Bad Boy</div>
+        <div class="charts-grid">
+            <div class="chart-container"><div id="badboyRevenueChart"></div></div>
+            <div class="chart-container"><div id="badboyBubbleChart"></div></div>
+        </div>
+        <div class="section-title">👑 Artistes Bad Boy</div>
         <div class="table-wrapper" id="badboyArtistTable"></div>
-        <div class="section-title" style="color:#D4D4D4">📜 Chronologie</div>
+        <div class="section-title blue">📜 Chronologie</div>
         <div class="timeline-list" id="badboyTimeline"></div>
     </div>
 
     <!-- RUTHLESS -->
     <div class="tab-content" id="ruthless">
+        <div class="stats-banner" id="ruthlessBanner"></div>
         <div class="metrics-grid" id="ruthlessMetrics"></div>
         <div class="info-grid" id="ruthlessInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="ruthlessArtistsChart"></div></div>
             <div class="chart-container"><div id="ruthlessROIChart"></div></div>
         </div>
-        <div class="section-title" style="color:#FBBF24">🎤 Artistes Ruthless</div>
+        <div class="charts-grid">
+            <div class="chart-container"><div id="ruthlessRevenueChart"></div></div>
+            <div class="chart-container"><div id="ruthlessBubbleChart"></div></div>
+        </div>
+        <div class="section-title">🎤 Artistes Ruthless</div>
         <div class="table-wrapper" id="ruthlessArtistTable"></div>
-        <div class="section-title" style="color:#FBBF24">📜 Chronologie</div>
+        <div class="section-title blue">📜 Chronologie</div>
         <div class="timeline-list" id="ruthlessTimeline"></div>
     </div>
 
     <!-- DEATH ROW -->
     <div class="tab-content" id="deathrow">
+        <div class="stats-banner" id="deathrowBanner"></div>
         <div class="metrics-grid" id="deathrowMetrics"></div>
         <div class="info-grid" id="deathrowInfo"></div>
         <div class="charts-grid">
             <div class="chart-container"><div id="deathrowArtistsChart"></div></div>
             <div class="chart-container"><div id="deathrowROIChart"></div></div>
         </div>
-        <div class="section-title" style="color:#EF4444">🎤 Artistes Death Row</div>
+        <div class="charts-grid">
+            <div class="chart-container"><div id="deathrowRevenueChart"></div></div>
+            <div class="chart-container"><div id="deathrowBubbleChart"></div></div>
+        </div>
+        <div class="section-title">🎤 Artistes Death Row</div>
         <div class="table-wrapper" id="deathrowArtistTable"></div>
-        <div class="section-title" style="color:#EF4444">📜 Chronologie</div>
+        <div class="section-title blue">📜 Chronologie</div>
         <div class="timeline-list" id="deathrowTimeline"></div>
     </div>
 
@@ -756,7 +830,7 @@
         <div class="comparator-section">
             <div class="comparator-header">
                 <h2>⚖️ Comparateur de Labels</h2>
-                <p>Sélectionnez deux labels pour les comparer sur différentes métriques clés.</p>
+                <p>Sélectionnez deux labels pour les comparer sur toutes les métriques clés.</p>
             </div>
             
             <div class="comparator-controls">
@@ -792,6 +866,10 @@
                 <div class="chart-container"><div id="compareRadarChart"></div></div>
                 <div class="chart-container"><div id="compareBarChart"></div></div>
             </div>
+            <div class="charts-grid" style="margin-top:1.25rem;">
+                <div class="chart-container"><div id="compareTimelineChart"></div></div>
+                <div class="chart-container"><div id="compareScatterChart"></div></div>
+            </div>
         </div>
 
         <div class="section-title">📊 Tableau Comparatif Détaillé</div>
@@ -801,19 +879,34 @@
 </main>
 
 <footer class="footer">
-    <div class="title">Hip-Hop Labels Dashboard</div>
+    <div class="title">🇺🇸 Hip-Hop Labels Dashboard USA</div>
+    <div class="flags">
+        <div class="flag-stripe" style="background:#B22234"></div>
+        <div class="flag-stripe" style="background:#FFFFFF"></div>
+        <div class="flag-stripe" style="background:#3C3B6E"></div>
+        <div class="flag-stripe" style="background:#FFFFFF"></div>
+        <div class="flag-stripe" style="background:#B22234"></div>
+    </div>
     <div>Analyse comparative 1984-2024 • Données enrichies à des fins éducatives</div>
 </footer>
 
 <script>
 // ============================================================
-// DATA ENRICHIE
+// DATA ENRICHIE - COULEURS DRAPEAU AMÉRICAIN
 // ============================================================
+
+const USA_COLORS = {
+    red: '#B22234',
+    white: '#FFFFFF',
+    blue: '#3C3B6E',
+    redLight: '#D64550',
+    blueLight: '#5A5A9E'
+};
 
 const LABELS_DATA = {
     defjam: {
         name: "Def Jam Recordings",
-        color: "#FF3B3B",
+        color: USA_COLORS.red,
         founded: 1984,
         founders: "Rick Rubin, Russell Simmons",
         genre: "Hip-hop, R&B, Urban",
@@ -826,35 +919,36 @@ const LABELS_DATA = {
         totalRevenue: 2050000000,
         peakRevenue: "250M$ (1999)",
         influence: 85,
-        keyFact: "Fondé dans une chambre universitaire à NYU avec un prêt parental. Le label a révolutionné le hip-hop commercial et a lancé des carrières légendaires comme LL Cool J, Beastie Boys, Public Enemy, Jay-Z, Kanye West et Rihanna.",
+        annualRevenue: "~$150M (estimé 2024)",
+        keyFact: "Fondé dans une chambre universitaire à NYU avec un prêt parental. Le label a révolutionné le hip-hop commercial et a lancé des carrières légendaires comme LL Cool J, Beastie Boys, Public Enemy, Jay-Z, Kanye West et Rihanna. Def Jam a généré 144M$ rien qu'avec les deux premiers albums de DMX [citation:17].",
         artists: {
-            "RICK RUBIN": { debut: 1984, genre: "Hip-hop, Rock", albums: 30, sales: 50000000, revenue: 200000000, roi: 800, influence: 10, success: "Co-fondateur", note: "A quitté Def Jam en 1988 pour fonder Def American" },
-            "RUSSELL SIMMONS": { debut: 1984, genre: "Hip-hop, Business", albums: 40, sales: 60000000, revenue: 300000000, roi: 750, influence: 9, success: "Visionnaire commercial", note: "A quitté le label en 1999. A popularisé le hip-hop dans la culture mainstream" },
-            "LL COOL J": { debut: 1985, genre: "Hip-hop, R&B", albums: 13, sales: 15000000, revenue: 80000000, roi: 600, influence: 8, success: "Radio (1985)", note: "Premier artiste du label. Pionnier du rap romantique" },
-            "JAY-Z": { debut: 1996, genre: "Hip-hop, Business", albums: 11, sales: 50000000, revenue: 1000000000, roi: 1000, influence: 10, success: "Reasonable Doubt (1996)", note: "Ancien CEO de Def Jam (2004-2007). Icône culturelle et businessman" },
-            "KANYE WEST": { debut: 2004, genre: "Hip-hop, Experimental", albums: 6, sales: 35000000, revenue: 250000000, roi: 900, influence: 10, success: "College Dropout (2004)", note: "A fusionné hip-hop, mode et art" },
-            "RZA": { debut: 1993, genre: "Hip-hop, Production", albums: 5, sales: 8000000, revenue: 40000000, roi: 500, influence: 9, success: "Enter the Wu-Tang", note: "Leader et producteur du Wu-Tang Clan" },
-            "METHOD MAN": { debut: 1994, genre: "Hip-hop, Hardcore", albums: 4, sales: 6000000, revenue: 30000000, roi: 450, influence: 8, success: "Tical (1994)", note: "Membre du Wu-Tang, star solo et acteur" },
-            "BEASTIE BOYS": { debut: 1986, genre: "Hip-hop, Rock", albums: 1, sales: 10000000, revenue: 50000000, roi: 550, influence: 9, success: "Licensed to Ill (1986)", note: "Premier groupe blanc de hip-hop. Licensed to Ill = best-seller des années 80" },
-            "PUBLIC ENEMY": { debut: 1987, genre: "Hip-hop, Politique", albums: 3, sales: 5000000, revenue: 25000000, roi: 400, influence: 10, success: "It Takes a Nation...", note: "Pionnier du hip-hop politique et conscient" }
+            "RICK RUBIN": { debut: 1984, genre: "Hip-hop, Rock", albums: 30, sales: 50000000, revenue: 200000000, roi: 800, influence: 10, note: "Co-fondateur. A quitté Def Jam en 1988 pour fonder Def American. Considéré comme l'un des plus grands producteurs de hip-hop [citation:17]." },
+            "RUSSELL SIMMONS": { debut: 1984, genre: "Hip-hop, Business", albums: 40, sales: 60000000, revenue: 300000000, roi: 750, influence: 9, note: "Visionnaire commercial. A quitté le label en 1999. A popularisé le hip-hop dans la culture mainstream [citation:10]." },
+            "LL COOL J": { debut: 1985, genre: "Hip-hop, R&B", albums: 13, sales: 15000000, revenue: 80000000, roi: 600, influence: 8, note: "Premier artiste du label. A sorti 'I Need a Beat' en 1984 et l'album Radio en 1985. Premier rappeur à connaître un succès mainstream [citation:10]." },
+            "JAY-Z": { debut: 1996, genre: "Hip-hop, Business", albums: 11, sales: 50000000, revenue: 1000000000, roi: 1000, influence: 10, note: "Ancien CEO de Def Jam (2004-2007). Def Jam a acquis 50% de Roc-A-Fella Records pour 1.4M$ en 1997 [citation:17]." },
+            "KANYE WEST": { debut: 2004, genre: "Hip-hop, Experimental", albums: 6, sales: 35000000, revenue: 250000000, roi: 900, influence: 10, note: "A fusionné hip-hop, mode et art. The College Dropout a été un succès critique et commercial." },
+            "RZA": { debut: 1993, genre: "Hip-hop, Production", albums: 5, sales: 8000000, revenue: 40000000, roi: 500, influence: 9, note: "Leader et producteur du Wu-Tang Clan. A signé avec Def Jam via une joint-venture." },
+            "METHOD MAN": { debut: 1994, genre: "Hip-hop, Hardcore", albums: 4, sales: 6000000, revenue: 30000000, roi: 450, influence: 8, note: "Membre du Wu-Tang, star solo et acteur. A collaboré avec Redman." },
+            "BEASTIE BOYS": { debut: 1986, genre: "Hip-hop, Rock", albums: 1, sales: 10000000, revenue: 50000000, roi: 550, influence: 9, note: "Premier groupe blanc de hip-hop. Licensed to Ill = best-seller des années 80 [citation:10]." },
+            "PUBLIC ENEMY": { debut: 1987, genre: "Hip-hop, Politique", albums: 3, sales: 5000000, revenue: 25000000, roi: 400, influence: 10, note: "Pionnier du hip-hop politique et conscient. Signé en 1987 [citation:10]." }
         },
         timeline: [
             { year: 1984, event: "Fondation par Rick Rubin dans sa chambre universitaire à NYU", type: "Structure" },
             { year: 1985, event: "Signature de LL Cool J - premier album Radio", type: "Artiste" },
-            { year: 1986, event: "Licensed to Ill (Beastie Boys) - premier #1 hip-hop", type: "Album" },
+            { year: 1986, event: "Licensed to Ill (Beastie Boys) - best-seller des années 80", type: "Album" },
             { year: 1987, event: "Signature de Public Enemy", type: "Artiste" },
             { year: 1988, event: "Départ de Rick Rubin", type: "Structure" },
-            { year: 1996, event: "Signature de Jay-Z", type: "Artiste" },
+            { year: 1997, event: "Acquisition de 50% de Roc-A-Fella pour 1.4M$", type: "Business" },
             { year: 1999, event: "Russell Simmons quitte le label. Vente à Universal", type: "Business" },
-            { year: 2004, event: "The College Dropout (Kanye West)", type: "Album" },
-            { year: 2004, event: "Jay-Z devient CEO", type: "Structure" },
+            { year: 2004, event: "The College Dropout (Kanye West) - Jay-Z devient CEO", type: "Album" },
             { year: 2007, event: "Jay-Z quitte le poste de CEO", type: "Structure" },
-            { year: 2024, event: "40ème anniversaire du label", type: "Événement" }
+            { year: 2023, event: "Décembre déclaré 'Def Jam Recognition Month' à NYC [citation:10]", type: "Événement" },
+            { year: 2024, event: "40ème anniversaire du label [citation:3]", type: "Événement" }
         ]
     },
     soulassassins: {
         name: "Soul Assassins",
-        color: "#A855F7",
+        color: USA_COLORS.blue,
         founded: 1997,
         founders: "DJ Muggs",
         genre: "Underground Hip-hop, Rap occult",
@@ -867,15 +961,16 @@ const LABELS_DATA = {
         totalRevenue: 61800000,
         peakRevenue: "Estimé 5M$ (2023)",
         influence: 59,
+        annualRevenue: "~$5M (estimé 2024)",
         keyFact: "Fondé par DJ Muggs de Cypress Hill. Le label est connu pour ses productions sombres et hardcore, collaborant avec la crème du rap underground américain comme Roc Marciano, Freddie Gibbs, Westside Gunn et MF DOOM.",
         artists: {
-            "DJ MUGGS": { debut: 1997, genre: "Boom bap, rap occult", albums: 15, sales: 800000, revenue: 5000000, roi: 150, influence: 10, success: "Soul Assassins: Ch.1", note: "Fondateur et beatmaker légendaire de Cypress Hill" },
-            "CYPRESS HILL": { debut: 1997, genre: "Hip-hop, rap rock", albums: 3, sales: 18000000, revenue: 40000000, roi: 300, influence: 8, success: "Black Sunday (1993)", note: "18 millions d'albums vendus mondialement. Groupe pionnier du rap rock" },
-            "GZA": { debut: 1999, genre: "Hip-hop, rap technique", albums: 1, sales: 2000000, revenue: 10000000, roi: 200, influence: 9, success: "Beneath the Surface (1999)", note: "Membre du Wu-Tang Clan. Génie lyrique" },
-            "ROC MARCIANO": { debut: 2010, genre: "Boom bap, mafioso rap", albums: 2, sales: 300000, revenue: 2000000, roi: 180, influence: 10, success: "Marcberg (2010)", note: "Figure majeure de la renaissance boom bap" },
-            "ILL BILL": { debut: 2004, genre: "Hardcore rap, horrorcore", albums: 3, sales: 400000, revenue: 2500000, roi: 160, influence: 9, success: "What's Wrong with Bill?", note: "Membre de Non Phixion. Rap politique et hardcore" },
-            "PLANET ASIA": { debut: 2001, genre: "Underground hip-hop", albums: 2, sales: 250000, revenue: 1500000, roi: 140, influence: 8, success: "The Pain (2004)", note: "Lyricist West Coast underground" },
-            "FLEE LORD": { debut: 2020, genre: "Boom bap, rap NY", albums: 2, sales: 100000, revenue: 800000, roi: 120, influence: 7, success: "Pray for the Evil 2", note: "Nouvelle génération, continuité boom bap" }
+            "DJ MUGGS": { debut: 1997, genre: "Boom bap, rap occult", albums: 15, sales: 800000, revenue: 5000000, roi: 150, influence: 10, note: "Fondateur et beatmaker légendaire de Cypress Hill." },
+            "CYPRESS HILL": { debut: 1997, genre: "Hip-hop, rap rock", albums: 3, sales: 18000000, revenue: 40000000, roi: 300, influence: 8, note: "18 millions d'albums vendus mondialement. Pionnier du rap rock." },
+            "GZA": { debut: 1999, genre: "Hip-hop, rap technique", albums: 1, sales: 2000000, revenue: 10000000, roi: 200, influence: 9, note: "Membre du Wu-Tang Clan. Génie lyrique. Album 'Beneath the Surface'." },
+            "ROC MARCIANO": { debut: 2010, genre: "Boom bap, mafioso rap", albums: 2, sales: 300000, revenue: 2000000, roi: 180, influence: 10, note: "Figure majeure de la renaissance boom bap. 'Marcberg' a relancé le genre." },
+            "ILL BILL": { debut: 2004, genre: "Hardcore rap, horrorcore", albums: 3, sales: 400000, revenue: 2500000, roi: 160, influence: 9, note: "Membre de Non Phixion. Rap politique et hardcore." },
+            "PLANET ASIA": { debut: 2001, genre: "Underground hip-hop", albums: 2, sales: 250000, revenue: 1500000, roi: 140, influence: 8, note: "Lyricist West Coast underground. Style technique." },
+            "FLEE LORD": { debut: 2020, genre: "Boom bap, rap NY", albums: 2, sales: 100000, revenue: 800000, roi: 120, influence: 7, note: "Nouvelle génération, continuité boom bap. A collaboré avec DJ Muggs." }
         },
         timeline: [
             { year: 1997, event: "Fondation par DJ Muggs après Cypress Hill", type: "Structure" },
@@ -893,7 +988,7 @@ const LABELS_DATA = {
     },
     aftermath: {
         name: "Aftermath Entertainment",
-        color: "#FFD700",
+        color: USA_COLORS.red,
         founded: 1996,
         founders: "Dr. Dre",
         genre: "Hip-hop premium, Production",
@@ -904,17 +999,18 @@ const LABELS_DATA = {
         totalArtists: 7,
         totalAlbums: 24,
         totalRevenue: 915000000,
-        peakRevenue: "Estimé 100M$ (2003)",
+        peakRevenue: "100M$ (2003)",
         influence: 65,
-        keyFact: "Fondé par Dr. Dre après son départ de Death Row. Label \"boutique\" privilégiant la qualité sur la quantité. 17 des 26 albums certifiés platine ou plus. A lancé les carrières d'Eminem, Kendrick Lamar et 50 Cent.",
+        annualRevenue: "~$80M (estimé 2024)",
+        keyFact: "Fondé par Dr. Dre après son départ de Death Row. Label 'boutique' privilégiant la qualité sur la quantité. 31 albums dans le Billboard 200, 124 chansons dans le Hot 100, et plus de 112 millions d'unités de consommation d'albums [citation:18]. A lancé les carrières d'Eminem, Kendrick Lamar et 50 Cent.",
         artists: {
-            "DR. DRE": { debut: 1996, genre: "G-funk, West Coast", albums: 2, sales: 15000000, revenue: 80000000, roi: 600, influence: 10, success: "2001 (1999)", note: "Fondateur. Producteur légendaire. 2001 = 6x platine" },
-            "EMINEM": { debut: 1998, genre: "Hip-hop, Rap hardcore", albums: 11, sales: 220000000, revenue: 500000000, roi: 1200, influence: 10, success: "Marshall Mathers LP", note: "Artiste le plus vendu. The Slim Shady LP = premier succès du label. 2 albums diamant" },
-            "KENDRICK LAMAR": { debut: 2012, genre: "Hip-hop, Rap conscient", albums: 4, sales: 25000000, revenue: 120000000, roi: 800, influence: 10, success: "To Pimp a Butterfly", note: "Premier rappeur à gagner le Prix Pulitzer (DAMN., 2017)" },
-            "THE GAME": { debut: 2004, genre: "Gangsta rap, West Coast", albums: 3, sales: 8000000, revenue: 40000000, roi: 400, influence: 8, success: "The Documentary", note: "A quitté le label en 2006 après tensions avec 50 Cent" },
-            "50 CENT": { debut: 2002, genre: "Hip-hop, Gangsta rap", albums: 2, sales: 30000000, revenue: 150000000, roi: 1000, influence: 9, success: "Get Rich or Die Tryin'", note: "Joint-venture avec Shady Records. Album = 2ème plus rapide de l'histoire US" },
-            "BUSTA RHYMES": { debut: 1998, genre: "Hip-hop, East Coast", albums: 1, sales: 2000000, revenue: 10000000, roi: 200, influence: 8, success: "Extinction Level Event", note: "A quitté le label en 2008 pour conflits avec Interscope" },
-            "ANDERSON .PAAK": { debut: 2016, genre: "R&B, Soul, Hip-hop", albums: 1, sales: 3000000, revenue: 15000000, roi: 250, influence: 9, success: "Oxnard (2018)", note: "Artiste éclectique. Multi-instrumentiste" }
+            "DR. DRE": { debut: 1996, genre: "G-funk, West Coast", albums: 2, sales: 15000000, revenue: 80000000, roi: 600, influence: 10, note: "Fondateur. Producteur légendaire. 2001 = 6x platine. A produit N.W.A, Snoop Dogg, Eminem, 50 Cent et Kendrick Lamar [citation:18]." },
+            "EMINEM": { debut: 1998, genre: "Hip-hop, Rap hardcore", albums: 11, sales: 220000000, revenue: 500000000, roi: 1200, influence: 10, note: "Artiste le plus vendu. The Slim Shady LP = premier succès du label. 2 albums diamant." },
+            "KENDRICK LAMAR": { debut: 2012, genre: "Hip-hop, Rap conscient", albums: 4, sales: 25000000, revenue: 120000000, roi: 800, influence: 10, note: "Premier rappeur à gagner le Prix Pulitzer (DAMN., 2017). A commencé chez TDE avant de signer chez Aftermath [citation:19]." },
+            "THE GAME": { debut: 2004, genre: "Gangsta rap, West Coast", albums: 3, sales: 8000000, revenue: 40000000, roi: 400, influence: 8, note: "A quitté le label en 2006 après tensions avec 50 Cent. The Documentary = 5x platine." },
+            "50 CENT": { debut: 2002, genre: "Hip-hop, Gangsta rap", albums: 2, sales: 30000000, revenue: 150000000, roi: 1000, influence: 9, note: "Joint-venture avec Shady Records. Get Rich or Die Tryin' = 2ème album le plus rapide de l'histoire US." },
+            "BUSTA RHYMES": { debut: 1998, genre: "Hip-hop, East Coast", albums: 1, sales: 2000000, revenue: 10000000, roi: 200, influence: 8, note: "A quitté le label en 2008 pour conflits avec Interscope." },
+            "ANDERSON .PAAK": { debut: 2016, genre: "R&B, Soul, Hip-hop", albums: 1, sales: 3000000, revenue: 15000000, roi: 250, influence: 9, note: "Artiste éclectique. Multi-instrumentiste. Oxnard (2018)." }
         },
         timeline: [
             { year: 1996, event: "Fondation par Dr. Dre après départ de Death Row", type: "Structure" },
@@ -933,7 +1029,7 @@ const LABELS_DATA = {
     },
     shady: {
         name: "Shady Records",
-        color: "#22C55E",
+        color: USA_COLORS.blue,
         founded: 1999,
         founders: "Eminem, Paul Rosenberg",
         genre: "Hip-hop, Rap hardcore",
@@ -944,24 +1040,25 @@ const LABELS_DATA = {
         totalArtists: 7,
         totalAlbums: 22,
         totalRevenue: 706000000,
-        peakRevenue: "Estimé 50M$ (2003)",
+        peakRevenue: "50M$ (2003)",
         influence: 60,
-        keyFact: "Fondé par Eminem et son manager Paul Rosenberg. 10 des 14 albums du label sont certifiés or ou plus. A lancé 50 Cent, D12, Obie Trice et Yelawolf. Radio Shade 45 sur SiriusXM.",
+        annualRevenue: "~$40M (estimé 2024)",
+        keyFact: "Fondé par Eminem et son manager Paul Rosenberg. 10 des 14 albums du label sont certifiés or ou plus. A lancé 50 Cent, D12, Obie Trice et Yelawolf. Radio Shade 45 sur SiriusXM. Shady Records fait partie des principaux labels de hip-hop avec une part de marché significative [citation:4].",
         artists: {
-            "EMINEM": { debut: 1999, genre: "Hip-hop, Horrorcore", albums: 11, sales: 220000000, revenue: 500000000, roi: 1200, influence: 10, success: "Marshall Mathers LP", note: "Fondateur. Artiste le plus vendu des années 2000. 2 albums diamant" },
-            "50 CENT": { debut: 2002, genre: "Hip-hop, Gangsta rap", albums: 2, sales: 30000000, revenue: 150000000, roi: 1000, influence: 9, success: "Get Rich or Die Tryin'", note: "Premier artiste signé simultanément chez Shady et Aftermath. Vendu 30M+" },
-            "OBIE TRICE": { debut: 2003, genre: "Hip-hop, Rap hardcore", albums: 3, sales: 2000000, revenue: 10000000, roi: 300, influence: 7, success: "Cheers (2003)", note: "Découvert via D12. Représentant de Detroit" },
-            "CASHIS": { debut: 2006, genre: "Hip-hop, Gangsta rap", albums: 1, sales: 500000, revenue: 3000000, roi: 200, influence: 6, success: "County Hound EP", note: "Signé via G-Unit. Style West Coast" },
-            "YELAWOLF": { debut: 2011, genre: "Hip-hop, Country rap", albums: 2, sales: 1000000, revenue: 8000000, roi: 250, influence: 7, success: "Radioactive (2011)", note: "Fusion hip-hop/country. Artiste éclectique" },
-            "SLAUGHTERHOUSE": { debut: 2009, genre: "Hip-hop, Rap technique", albums: 1, sales: 800000, revenue: 5000000, roi: 220, influence: 7, success: "Welcome to: Our House", note: "Supergroupe lyrique (Joe Budden, Crooked I, Royce, Joell Ortiz)" },
-            "D12": { debut: 2001, genre: "Hip-hop, Horrorcore", albums: 2, sales: 6000000, revenue: 30000000, roi: 400, influence: 7, success: "Devil's Night (2001)", note: "Groupe d'Eminem. 2 albums #1 Billboard. Devil's Night = 2x platine" }
+            "EMINEM": { debut: 1999, genre: "Hip-hop, Horrorcore", albums: 11, sales: 220000000, revenue: 500000000, roi: 1200, influence: 10, note: "Fondateur. Artiste le plus vendu des années 2000. 2 albums diamant. A signé 50 Cent via Shady/Aftermath." },
+            "50 CENT": { debut: 2002, genre: "Hip-hop, Gangsta rap", albums: 2, sales: 30000000, revenue: 150000000, roi: 1000, influence: 9, note: "Premier artiste signé simultanément chez Shady et Aftermath. Vendu 30M+." },
+            "OBIE TRICE": { debut: 2003, genre: "Hip-hop, Rap hardcore", albums: 3, sales: 2000000, revenue: 10000000, roi: 300, influence: 7, note: "Découvert via D12. Représentant de Detroit. Cheers (2003)." },
+            "CASHIS": { debut: 2006, genre: "Hip-hop, Gangsta rap", albums: 1, sales: 500000, revenue: 3000000, roi: 200, influence: 6, note: "Signé via G-Unit. Style West Coast. The County Hound EP." },
+            "YELAWOLF": { debut: 2011, genre: "Hip-hop, Country rap", albums: 2, sales: 1000000, revenue: 8000000, roi: 250, influence: 7, note: "Fusion hip-hop/country. Artiste éclectique. Radioactive (2011)." },
+            "SLAUGHTERHOUSE": { debut: 2009, genre: "Hip-hop, Rap technique", albums: 1, sales: 800000, revenue: 5000000, roi: 220, influence: 7, note: "Supergroupe lyrique (Joe Budden, Crooked I, Royce, Joell Ortiz)." },
+            "D12": { debut: 2001, genre: "Hip-hop, Horrorcore", albums: 2, sales: 6000000, revenue: 30000000, roi: 400, influence: 7, note: "Groupe d'Eminem. 2 albums #1 Billboard. Devil's Night = 2x platine." }
         },
         timeline: [
             { year: 1999, event: "Fondation par Eminem et Paul Rosenberg", type: "Structure" },
             { year: 2000, event: "Signature de D12", type: "Artiste" },
             { year: 2001, event: "Devil's Night (D12) - #1 Billboard", type: "Album" },
             { year: 2002, event: "Signature de 50 Cent", type: "Artiste" },
-            { year: 2003, event: "Get Rich or Die Tryin' (50 Cent)", type: "Album" },
+            { year: 2003, event: "Get Rich or Die Tryin' (50 Cent) - 30M+ vendus", type: "Album" },
             { year: 2003, event: "Cheers (Obie Trice)", type: "Album" },
             { year: 2004, event: "D12 World - 2x platine", type: "Album" },
             { year: 2006, event: "Eminem Presents: The Re-Up", type: "Album" },
@@ -973,7 +1070,7 @@ const LABELS_DATA = {
     },
     badboy: {
         name: "Bad Boy Records",
-        color: "#D4D4D4",
+        color: USA_COLORS.red,
         founded: 1993,
         founders: "Sean 'Puffy' Combs",
         genre: "Hip-hop, R&B, Pop rap",
@@ -986,15 +1083,16 @@ const LABELS_DATA = {
         totalRevenue: 375000000,
         peakRevenue: "130M$ (une année)",
         influence: 52,
-        keyFact: "Créé via un joint-venture 50/50 de 1.5M$ avec Arista. A dominé les années 90 avec The Notorious B.I.G., Faith Evans, Mase et 112. Pionnier du \"Shiny Suit Era\" et du sampling pop industrialisé.",
+        annualRevenue: "~$25M (estimé 2024)",
+        keyFact: "Créé via un joint-venture 50/50 de 1.5M$ avec Arista. Bad Boy a placé 70 albums dans le Billboard 200 et 102 chansons dans le Hot 100, générant 63.4 millions d'unités de consommation d'albums [citation:18]. A dominé les années 90 avec The Notorious B.I.G., Faith Evans, Mase et 112.",
         artists: {
-            "P. DIDDY": { debut: 1993, genre: "Hip-hop, R&B, Pop", albums: 6, sales: 25000000, revenue: 150000000, roi: 900, influence: 9, success: "No Way Out (1997)", note: "Fondateur. A négocié un deal 50/50 avec Arista. A créé Love Records en 2023" },
-            "THE NOTORIOUS B.I.G.": { debut: 1994, genre: "Hip-hop, Rap East Coast", albums: 2, sales: 17000000, revenue: 100000000, roi: 1100, influence: 10, success: "Ready to Die", note: "Légende du rap East Coast. Ready to Die = 6x platine. Décédé en 1997" },
-            "MASE": { debut: 1997, genre: "Hip-hop, Pop rap", albums: 2, sales: 5000000, revenue: 25000000, roi: 600, influence: 7, success: "Harlem World", note: "Harlem World = 4x platine. S'est retiré pour devenir pasteur" },
-            "LIL' KIM": { debut: 1996, genre: "Hip-hop, Hardcore rap", albums: 1, sales: 6000000, revenue: 30000000, roi: 500, influence: 9, success: "Hard Core (1996)", note: "Pionnière du rap féminin hardcore. Hard Core = 2x platine" },
-            "FAITH EVANS": { debut: 1995, genre: "R&B, Soul", albums: 3, sales: 4000000, revenue: 20000000, roi: 400, influence: 7, success: "Faith (1995)", note: "First Lady de Bad Boy. A épousé The Notorious B.I.G." },
-            "TOTAL": { debut: 1995, genre: "R&B, New Jack Swing", albums: 2, sales: 3000000, revenue: 15000000, roi: 300, influence: 6, success: "Total (1996)", note: "Girl group R&B. Harmonies des années 90" },
-            "112": { debut: 1996, genre: "R&B, Hip-hop soul", albums: 3, sales: 8000000, revenue: 40000000, roi: 550, influence: 7, success: "112 (1996)", note: "Boy band R&B. Room 112 = 2x platine" }
+            "P. DIDDY": { debut: 1993, genre: "Hip-hop, R&B, Pop", albums: 6, sales: 25000000, revenue: 150000000, roi: 900, influence: 9, note: "Fondateur. A négocié un deal 50/50 avec Arista. A créé Love Records en 2023. 70 albums Billboard 200 [citation:18]." },
+            "THE NOTORIOUS B.I.G.": { debut: 1994, genre: "Hip-hop, Rap East Coast", albums: 2, sales: 17000000, revenue: 100000000, roi: 1100, influence: 10, note: "Légende du rap East Coast. Ready to Die = 6x platine. Décédé en 1997." },
+            "MASE": { debut: 1997, genre: "Hip-hop, Pop rap", albums: 2, sales: 5000000, revenue: 25000000, roi: 600, influence: 7, note: "Harlem World = 4x platine. S'est retiré pour devenir pasteur." },
+            "LIL' KIM": { debut: 1996, genre: "Hip-hop, Hardcore rap", albums: 1, sales: 6000000, revenue: 30000000, roi: 500, influence: 9, note: "Pionnière du rap féminin hardcore. Hard Core = 2x platine." },
+            "FAITH EVANS": { debut: 1995, genre: "R&B, Soul", albums: 3, sales: 4000000, revenue: 20000000, roi: 400, influence: 7, note: "First Lady de Bad Boy. A épousé The Notorious B.I.G." },
+            "TOTAL": { debut: 1995, genre: "R&B, New Jack Swing", albums: 2, sales: 3000000, revenue: 15000000, roi: 300, influence: 6, note: "Girl group R&B. Harmonies des années 90. Total (1996)." },
+            "112": { debut: 1996, genre: "R&B, Hip-hop soul", albums: 3, sales: 8000000, revenue: 40000000, roi: 550, influence: 7, note: "Boy band R&B. Room 112 = 2x platine." }
         },
         timeline: [
             { year: 1993, event: "Fondation par Sean Combs via joint-venture 1.5M$ avec Arista", type: "Structure" },
@@ -1012,7 +1110,7 @@ const LABELS_DATA = {
     },
     ruthless: {
         name: "Ruthless Records",
-        color: "#FBBF24",
+        color: USA_COLORS.blue,
         founded: 1987,
         founders: "Eazy-E, Jerry Heller",
         genre: "Gangsta rap, West Coast",
@@ -1025,14 +1123,15 @@ const LABELS_DATA = {
         totalRevenue: 132000000,
         peakRevenue: "10M$/mois (1995)",
         influence: 50,
+        annualRevenue: "~$3M (catalogue)",
         keyFact: "Fondé par Eazy-E avec 250,000$ (argent de Jerry Heller + contribution Sony/Relativity de 2.25M$). A lancé N.W.A. et le gangsta rap. 110 millions de disques vendus. Straight Outta Compton = premier album platine sans radio.",
         artists: {
-            "EAZY-E": { debut: 1988, genre: "Gangsta rap, West Coast", albums: 3, sales: 5000000, revenue: 25000000, roi: 700, influence: 10, success: "Eazy-Duz-It (1988)", note: "Fondateur. A découvert N.W.A., Bone Thugs-N-Harmony et J.J. Fad. Décédé en 1995" },
-            "N.W.A": { debut: 1988, genre: "Gangsta rap, political", albums: 1, sales: 3000000, revenue: 20000000, roi: 600, influence: 10, success: "Straight Outta Compton", note: "Pionnier du gangsta rap. Premier album platine sans radio" },
-            "BONE THUGS-N-HARMONY": { debut: 1993, genre: "Gangsta rap, melodic", albums: 4, sales: 20000000, revenue: 80000000, roi: 1000, influence: 9, success: "E. 1999 Eternal", note: "Découverts par Eazy-E à Cleveland. Tha Crossroads = Grammy. 4x platine" },
-            "DRESTA": { debut: 1995, genre: "Gangsta rap, West Coast", albums: 2, sales: 800000, revenue: 4000000, roi: 300, influence: 7, success: "Player of the Year", note: "Artiste West Coast. Collaborateur de longue date" },
-            "KOKANE": { debut: 1991, genre: "G-funk, gangsta rap", albums: 3, sales: 600000, revenue: 3000000, roi: 250, influence: 7, success: "Addictive Hip Hop Muzick", note: "Voix distinctive. Collaborateur de Snoop Dogg" },
-            "MC REN": { debut: 1989, genre: "Gangsta rap, political", albums: 2, sales: 400000, revenue: 2000000, roi: 200, influence: 7, success: "Kizz My Black Azz", note: "Membre de N.W.A. Paroles engagées" }
+            "EAZY-E": { debut: 1988, genre: "Gangsta rap, West Coast", albums: 3, sales: 5000000, revenue: 25000000, roi: 700, influence: 10, note: "Fondateur. A découvert N.W.A., Bone Thugs-N-Harmony et J.J. Fad. Décédé en 1995." },
+            "N.W.A": { debut: 1988, genre: "Gangsta rap, political", albums: 1, sales: 3000000, revenue: 20000000, roi: 600, influence: 10, note: "Pionnier du gangsta rap. Premier album platine sans radio. Straight Outta Compton." },
+            "BONE THUGS-N-HARMONY": { debut: 1993, genre: "Gangsta rap, melodic", albums: 4, sales: 20000000, revenue: 80000000, roi: 1000, influence: 9, note: "Découverts par Eazy-E à Cleveland. Tha Crossroads = Grammy. 4x platine." },
+            "DRESTA": { debut: 1995, genre: "Gangsta rap, West Coast", albums: 2, sales: 800000, revenue: 4000000, roi: 300, influence: 7, note: "Artiste West Coast. Collaborateur de longue date. Player of the Year." },
+            "KOKANE": { debut: 1991, genre: "G-funk, gangsta rap", albums: 3, sales: 600000, revenue: 3000000, roi: 250, influence: 7, note: "Voix distinctive. Collaborateur de Snoop Dogg." },
+            "MC REN": { debut: 1989, genre: "Gangsta rap, political", albums: 2, sales: 400000, revenue: 2000000, roi: 200, influence: 7, note: "Membre de N.W.A. Paroles engagées. Kizz My Black Azz." }
         },
         timeline: [
             { year: 1987, event: "Fondation par Eazy-E et Jerry Heller", type: "Structure" },
@@ -1049,7 +1148,7 @@ const LABELS_DATA = {
     },
     deathrow: {
         name: "Death Row Records",
-        color: "#EF4444",
+        color: USA_COLORS.red,
         founded: 1991,
         founders: "Suge Knight, Dr. Dre, The D.O.C.",
         genre: "West Coast Hip-hop, G-funk",
@@ -1062,14 +1161,15 @@ const LABELS_DATA = {
         totalRevenue: 153000000,
         peakRevenue: "100M$/an (1996)",
         influence: 53,
-        keyFact: "Fondé par Dr. Dre après son départ de Ruthless. A dominé le hip-hop West Coast avec The Chronic, Doggystyle et All Eyez on Me. 150 millions d'albums vendus et 750M$ de revenus. Snoop Dogg a racheté le label en 2022 pour 18M$.",
+        annualRevenue: "~$15M (2025) [citation:5]",
+        keyFact: "Fondé par Dr. Dre après son départ de Ruthless. A dominé le hip-hop West Coast avec The Chronic, Doggystyle et All Eyez on Me. Snoop Dogg a racheté le label en février 2022 auprès de MNRK Music Group. À son apogée dans les années 90, Death Row générait plus de 100M$ par an [citation:5].",
         artists: {
-            "DR. DRE": { debut: 1992, genre: "G-funk, hip-hop", albums: 2, sales: 7000000, revenue: 45000000, roi: 800, influence: 10, success: "The Chronic (1992)", note: "Co-fondateur. The Chronic = 5M+ copies. A quitté en 1996 pour fonder Aftermath" },
-            "SNOOP DOGG": { debut: 1993, genre: "G-funk, hip-hop", albums: 2, sales: 10000000, revenue: 60000000, roi: 900, influence: 10, success: "Doggystyle (1993)", note: "Doggystyle = 11x platine. A racheté Death Row en 2022 pour 18M$" },
-            "TUPAC SHAKUR": { debut: 1995, genre: "Hip-hop, rap conscient", albums: 2, sales: 12000000, revenue: 80000000, roi: 1100, influence: 10, success: "All Eyez on Me", note: "Signé après que Suge Knight ait payé sa caution de 1.4M$. All Eyez on Me = diamant. Décédé en 1996" },
-            "DAZ DILLINGER": { debut: 1996, genre: "G-funk, hip-hop", albums: 2, sales: 1500000, revenue: 8000000, roi: 300, influence: 8, success: "Retaliation, Revenge", note: "Producteur et rappeur. Membre de Tha Dogg Pound" },
-            "NATE DOGG": { debut: 1994, genre: "G-funk, hip-hop", albums: 1, sales: 800000, revenue: 4000000, roi: 250, influence: 8, success: "G-Funk Classics", note: "Voix légendaire du G-funk. Hook master" },
-            "WARREN G": { debut: 1994, genre: "G-funk, hip-hop", albums: 1, sales: 3000000, revenue: 15000000, roi: 400, influence: 8, success: "Regulate...G Funk Era", note: "Demi-frère de Dr. Dre. Regulate = hit mondial" }
+            "DR. DRE": { debut: 1992, genre: "G-funk, hip-hop", albums: 2, sales: 7000000, revenue: 45000000, roi: 800, influence: 10, note: "Co-fondateur. The Chronic = 5M+ copies. A quitté en 1996 pour fonder Aftermath." },
+            "SNOOP DOGG": { debut: 1993, genre: "G-funk, hip-hop", albums: 2, sales: 10000000, revenue: 60000000, roi: 900, influence: 10, note: "Doggystyle = 11x platine. A racheté Death Row en 2022 pour 18M$ [citation:5]." },
+            "TUPAC SHAKUR": { debut: 1995, genre: "Hip-hop, rap conscient", albums: 2, sales: 12000000, revenue: 80000000, roi: 1100, influence: 10, note: "Signé après que Suge Knight ait payé sa caution de 1.4M$. All Eyez on Me = diamant. Décédé en 1996." },
+            "DAZ DILLINGER": { debut: 1996, genre: "G-funk, hip-hop", albums: 2, sales: 1500000, revenue: 8000000, roi: 300, influence: 8, note: "Producteur et rappeur. Membre de Tha Dogg Pound." },
+            "NATE DOGG": { debut: 1994, genre: "G-funk, hip-hop", albums: 1, sales: 800000, revenue: 4000000, roi: 250, influence: 8, note: "Voix légendaire du G-funk. Hook master. G-Funk Classics." },
+            "WARREN G": { debut: 1994, genre: "G-funk, hip-hop", albums: 1, sales: 3000000, revenue: 15000000, roi: 400, influence: 8, note: "Demi-frère de Dr. Dre. Regulate = hit mondial." }
         },
         timeline: [
             { year: 1991, event: "Fondation par Suge Knight, Dr. Dre et The D.O.C.", type: "Structure" },
@@ -1081,7 +1181,7 @@ const LABELS_DATA = {
             { year: 1996, event: "Départ de Dr. Dre", type: "Structure" },
             { year: 1997, event: "Départ de Snoop Dogg", type: "Structure" },
             { year: 2006, event: "Faillite du label", type: "Business" },
-            { year: 2022, event: "Rachat par Snoop Dogg pour 18M$", type: "Business" }
+            { year: 2022, event: "Rachat par Snoop Dogg pour 18M$ [citation:5]", type: "Business" }
         ]
     }
 };
@@ -1134,16 +1234,13 @@ const plotlyConfig = {
 document.querySelectorAll('.nav-tab').forEach(tab => {
     tab.addEventListener('click', () => {
         const targetId = tab.dataset.tab;
-        
         document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        
         tab.classList.add('active');
         document.getElementById(targetId).classList.add('active');
         
         setTimeout(() => {
-            const activeTab = document.getElementById(targetId);
-            activeTab.querySelectorAll('.js-plotly-plot').forEach(el => {
+            document.getElementById(targetId).querySelectorAll('.js-plotly-plot').forEach(el => {
                 Plotly.Plots.resize(el);
             });
         }, 50);
@@ -1164,50 +1261,45 @@ function renderOverview() {
     const totalRevenue = Object.values(LABELS_DATA).reduce((s, l) => s + l.totalRevenue, 0);
     const totalAlbums = Object.values(LABELS_DATA).reduce((s, l) => s + l.totalAlbums, 0);
 
+    document.getElementById('overviewBanner').innerHTML = `
+        <div class="banner-stat"><div class="num">${formatNumber(totalSales)}</div><div class="lbl">Albums Vendus</div></div>
+        <div class="banner-stat"><div class="num">${totalArtists}</div><div class="lbl">Artistes</div></div>
+        <div class="banner-stat"><div class="num">${totalAlbums}</div><div class="lbl">Albums</div></div>
+        <div class="banner-stat"><div class="num">${formatCurrency(totalRevenue)}</div><div class="lbl">Revenus Cumulés</div></div>
+    `;
+
     document.getElementById('overviewMetrics').innerHTML = `
-        <div class="metric-card" style="--accent:#FF3B3B;">
+        <div class="metric-card" style="--accent:${USA_COLORS.red};">
             <div class="label">💿 Ventes Totales</div>
-            <div class="value" style="color:#FF3B3B;">${formatNumber(totalSales)}</div>
+            <div class="value" style="color:${USA_COLORS.red};">${formatNumber(totalSales)}</div>
             <div class="sublabel">Albums vendus</div>
         </div>
-        <div class="metric-card" style="--accent:#FFD700;">
+        <div class="metric-card" style="--accent:${USA_COLORS.blue};">
             <div class="label">🎤 Artistes</div>
-            <div class="value" style="color:#FFD700;">${totalArtists}</div>
+            <div class="value" style="color:${USA_COLORS.blueLight};">${totalArtists}</div>
             <div class="sublabel">Artistes légendaires</div>
         </div>
-        <div class="metric-card" style="--accent:#22C55E;">
+        <div class="metric-card" style="--accent:${USA_COLORS.red};">
             <div class="label">🎵 Albums</div>
-            <div class="value" style="color:#22C55E;">${totalAlbums}</div>
+            <div class="value" style="color:${USA_COLORS.redLight};">${totalAlbums}</div>
             <div class="sublabel">Albums classiques</div>
         </div>
-        <div class="metric-card" style="--accent:#A855F7;">
+        <div class="metric-card" style="--accent:${USA_COLORS.blue};">
             <div class="label">💰 Revenus</div>
-            <div class="value" style="color:#A855F7;">${formatCurrency(totalRevenue)}</div>
+            <div class="value" style="color:${USA_COLORS.blueLight};">${formatCurrency(totalRevenue)}</div>
             <div class="sublabel">CA cumulé estimé</div>
         </div>
     `;
 
     document.getElementById('labelCards').innerHTML = Object.entries(LABELS_DATA).map(([key, label]) => `
         <div class="label-card" style="--accent:${label.color}" onclick="switchToTab('${key}')">
-            <h3 style="color:${label.color}">${label.name}</h3>
+            <h3 style="color:${label.color === USA_COLORS.red ? USA_COLORS.redLight : USA_COLORS.blueLight}">${label.name}</h3>
             <div class="meta">${label.founded} • ${label.founders}</div>
             <div class="label-stats">
-                <div class="stat">
-                    <div class="num" style="color:${label.color}">${formatNumber(label.totalSales)}</div>
-                    <div class="lbl">Ventes</div>
-                </div>
-                <div class="stat">
-                    <div class="num" style="color:${label.color}">${label.totalArtists}</div>
-                    <div class="lbl">Artistes</div>
-                </div>
-                <div class="stat">
-                    <div class="num" style="color:${label.color}">${formatNumber(label.totalRevenue)}</div>
-                    <div class="lbl">Revenus</div>
-                </div>
-                <div class="stat">
-                    <div class="num" style="color:${label.color}">${label.influence}/70</div>
-                    <div class="lbl">Influence</div>
-                </div>
+                <div class="stat"><div class="num" style="color:${USA_COLORS.redLight}">${formatNumber(label.totalSales)}</div><div class="lbl">Ventes</div></div>
+                <div class="stat"><div class="num" style="color:${USA_COLORS.blueLight}">${label.totalArtists}</div><div class="lbl">Artistes</div></div>
+                <div class="stat"><div class="num" style="color:${USA_COLORS.redLight}">${formatNumber(label.totalRevenue)}</div><div class="lbl">Revenus</div></div>
+                <div class="stat"><div class="num" style="color:${USA_COLORS.blueLight}">${label.influence}/70</div><div class="lbl">Influence</div></div>
             </div>
         </div>
     `).join('');
@@ -1227,8 +1319,7 @@ function renderOverview() {
         title: { text: 'Ventes par Label (Millions)', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
         xaxis: { ...axisStyle, tickfont: { size: 10, color: '#a3a3a3' }, tickangle: -30 },
         yaxis: { ...axisStyle, title: { text: 'Millions', font: { size: 11 } } },
-        margin: { t: 55, r: 25, b: 100, l: 60 },
-        height: 400
+        margin: { t: 55, r: 25, b: 100, l: 60 }, height: 400
     }, plotlyConfig);
 
     Plotly.newPlot('overviewRevenueChart', [{
@@ -1244,25 +1335,55 @@ function renderOverview() {
         title: { text: 'Revenus par Label (Millions $)', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
         xaxis: { ...axisStyle, tickfont: { size: 10, color: '#a3a3a3' }, tickangle: -30 },
         yaxis: { ...axisStyle, title: { text: 'Millions $', font: { size: 11 } } },
-        margin: { t: 55, r: 25, b: 100, l: 60 },
+        margin: { t: 55, r: 25, b: 100, l: 60 }, height: 400
+    }, plotlyConfig);
+
+    Plotly.newPlot('overviewInfluenceChart', [{
+        x: labels.map(l => l.totalArtists),
+        y: labels.map(l => l.totalRevenue / 1e6),
+        mode: 'markers+text',
+        marker: {
+            size: labels.map(l => Math.max(20, Math.min(60, l.totalSales / 5e6))),
+            color: labels.map(l => l.color),
+            opacity: 0.85,
+            line: { width: 2, color: '#fff' }
+        },
+        text: labels.map(l => l.name.split(' ')[0]),
+        textposition: 'top center',
+        textfont: { color: '#fff', size: 10, weight: 700 }
+    }], {
+        ...baseLayout,
+        title: { text: 'Artistes vs Revenus (Taille = Ventes)', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
+        xaxis: { ...axisStyle, title: { text: "Nombre d'artistes", font: { size: 11 } } },
+        yaxis: { ...axisStyle, title: { text: 'Revenus (M$)', font: { size: 11 } } },
         height: 400
     }, plotlyConfig);
 
+    Plotly.newPlot('overviewEfficiencyChart', [{
+        x: labels.map(l => l.name.split(' ')[0]),
+        y: labels.map(l => l.totalRevenue / l.totalSales * 100),
+        type: 'bar',
+        marker: { color: labels.map(l => l.color), line: { width: 0 } },
+        text: labels.map(l => (l.totalRevenue / l.totalSales * 100).toFixed(0) + '%'),
+        textposition: 'outside',
+        textfont: { color: '#fff', size: 11, weight: 700 }
+    }], {
+        ...baseLayout,
+        title: { text: 'Efficacité: Revenus / Ventes (%)', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
+        xaxis: { ...axisStyle, tickfont: { size: 10, color: '#a3a3a3' }, tickangle: -30 },
+        yaxis: { ...axisStyle, title: { text: 'Ratio (%)', font: { size: 11 } } },
+        margin: { t: 55, r: 25, b: 100, l: 60 }, height: 400
+    }, plotlyConfig);
+
     const allEvents = Object.entries(LABELS_DATA).map(([key, label]) => ({
-        year: label.founded,
-        label: label.name,
-        color: label.color
+        year: label.founded, label: label.name, color: label.color
     })).sort((a, b) => a.year - b.year);
 
     Plotly.newPlot('overviewTimelineChart', [{
         x: allEvents.map(e => e.year),
         y: allEvents.map((e, i) => (i % 2 === 0) ? 2 : 1),
         mode: 'markers+text',
-        marker: {
-            size: 22,
-            color: allEvents.map(e => e.color),
-            line: { width: 2, color: '#fff' }
-        },
+        marker: { size: 22, color: allEvents.map(e => e.color), line: { width: 2, color: '#fff' } },
         text: allEvents.map(e => e.label.split(' ')[0]),
         textposition: allEvents.map((e, i) => (i % 2 === 0) ? 'top center' : 'bottom center'),
         textfont: { color: '#fff', size: 11, weight: 700 }
@@ -1278,18 +1399,13 @@ function renderOverview() {
 function switchToTab(tabId) {
     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    
     document.querySelector(`.nav-tab[data-tab="${tabId}"]`).classList.add('active');
     document.getElementById(tabId).classList.add('active');
-    
     if (tabId === 'overview') renderOverview();
     else if (tabId === 'comparator') updateComparator();
     else renderLabelTab(tabId);
-    
     setTimeout(() => {
-        document.querySelectorAll('.tab-content.active .js-plotly-plot').forEach(el => {
-            Plotly.Plots.resize(el);
-        });
+        document.querySelectorAll('.tab-content.active .js-plotly-plot').forEach(el => Plotly.Plots.resize(el));
     }, 50);
 }
 
@@ -1300,164 +1416,110 @@ function switchToTab(tabId) {
 function renderLabelTab(labelKey) {
     const label = LABELS_DATA[labelKey];
     const prefix = labelKey;
+    const color = label.color;
 
-    document.getElementById(prefix + 'Metrics').innerHTML = `
-        <div class="metric-card" style="--accent:${label.color};">
-            <div class="label">💿 Ventes Totales</div>
-            <div class="value" style="color:${label.color};">${formatNumber(label.totalSales)}</div>
-            <div class="sublabel">Albums vendus</div>
-        </div>
-        <div class="metric-card" style="--accent:${label.color};">
-            <div class="label">🎤 Artistes</div>
-            <div class="value" style="color:${label.color};">${label.totalArtists}</div>
-            <div class="sublabel">Artistes légendaires</div>
-        </div>
-        <div class="metric-card" style="--accent:${label.color};">
-            <div class="label">🎵 Albums</div>
-            <div class="value" style="color:${label.color};">${label.totalAlbums}</div>
-            <div class="sublabel">Albums classiques</div>
-        </div>
-        <div class="metric-card" style="--accent:${label.color};">
-            <div class="label">💰 Revenus</div>
-            <div class="value" style="color:${label.color};">${formatCurrency(label.totalRevenue)}</div>
-            <div class="sublabel">Chiffre d'affaires</div>
-        </div>
+    document.getElementById(prefix + 'Banner').innerHTML = `
+        <div class="banner-stat"><div class="num" style="color:#fff">${formatNumber(label.totalSales)}</div><div class="lbl">Albums Vendus</div></div>
+        <div class="banner-stat"><div class="num" style="color:#fff">${label.totalArtists}</div><div class="lbl">Artistes</div></div>
+        <div class="banner-stat"><div class="num" style="color:#fff">${label.totalAlbums}</div><div class="lbl">Albums</div></div>
+        <div class="banner-stat"><div class="num" style="color:#fff">${formatCurrency(label.totalRevenue)}</div><div class="lbl">Revenus</div></div>
     `;
 
-    // Info Cards
+    document.getElementById(prefix + 'Metrics').innerHTML = `
+        <div class="metric-card" style="--accent:${color};"><div class="label">💿 Ventes</div><div class="value" style="color:${color};">${formatNumber(label.totalSales)}</div><div class="sublabel">Albums vendus</div></div>
+        <div class="metric-card" style="--accent:${color};"><div class="label">🎤 Artistes</div><div class="value" style="color:${color};">${label.totalArtists}</div><div class="sublabel">Artistes légendaires</div></div>
+        <div class="metric-card" style="--accent:${color};"><div class="label">🎵 Albums</div><div class="value" style="color:${color};">${label.totalAlbums}</div><div class="sublabel">Albums classiques</div></div>
+        <div class="metric-card" style="--accent:${color};"><div class="label">💰 Revenus</div><div class="value" style="color:${color};">${formatCurrency(label.totalRevenue)}</div><div class="sublabel">Chiffre d'affaires</div></div>
+    `;
+
     document.getElementById(prefix + 'Info').innerHTML = `
-        <div class="info-card">
-            <div class="info-label">🏢 Fondation</div>
-            <div class="info-value">${label.founded}</div>
-            <div class="info-detail">Fondé par ${label.founders}</div>
-        </div>
-        <div class="info-card">
-            <div class="info-label">🎵 Genre Principal</div>
-            <div class="info-value">${label.genre}</div>
-            <div class="info-detail">${label.philosophy}</div>
-        </div>
-        <div class="info-card">
-            <div class="info-label">📍 Siège</div>
-            <div class="info-value">${label.headquarters}</div>
-            <div class="info-detail">Distribution: ${label.distribution}</div>
-        </div>
-        <div class="info-card">
-            <div class="info-label">📈 Pic de Revenus</div>
-            <div class="info-value">${label.peakRevenue}</div>
-            <div class="info-detail">Influence globale: ${label.influence}/70</div>
-        </div>
-        <div class="info-card" style="grid-column: 1 / -1;">
-            <div class="info-label">💡 Fait Marquand</div>
-            <div class="info-value" style="font-size: 0.95rem; line-height: 1.5;">${label.keyFact}</div>
-        </div>
+        <div class="info-card"><div class="info-label">🏢 Fondation</div><div class="info-value">${label.founded}</div><div class="info-detail">Fondé par ${label.founders}</div></div>
+        <div class="info-card"><div class="info-label">🎵 Genre</div><div class="info-value">${label.genre}</div><div class="info-detail">${label.philosophy}</div></div>
+        <div class="info-card"><div class="info-label">📍 Siège</div><div class="info-value">${label.headquarters}</div><div class="info-detail">${label.distribution}</div></div>
+        <div class="info-card"><div class="info-label">📈 Revenus Annuels</div><div class="info-value">${label.annualRevenue}</div><div class="info-detail">Pic: ${label.peakRevenue}</div></div>
+        <div class="info-card" style="grid-column: 1 / -1;"><div class="info-label">💡 Fait Marquand</div><div class="info-value" style="font-size: 0.95rem; line-height: 1.5;">${label.keyFact}</div></div>
     `;
 
     const artistNames = Object.keys(label.artists);
     const artistSales = artistNames.map(a => label.artists[a].sales / 1e6);
-    const artistColors = artistNames.map((_, i) => {
-        const hue = (i * 360 / artistNames.length + 200) % 360;
-        return `hsl(${hue}, 75%, 55%)`;
-    });
+    const artistColors = artistNames.map((_, i) => i % 2 === 0 ? USA_COLORS.red : USA_COLORS.blue);
 
     Plotly.newPlot(prefix + 'ArtistsChart', [{
-        x: artistNames,
-        y: artistSales,
-        type: 'bar',
+        x: artistNames, y: artistSales, type: 'bar',
         marker: { color: artistColors, line: { width: 0 } },
         text: artistSales.map(s => s >= 1 ? s.toFixed(1) + 'M' : (s * 1000).toFixed(0) + 'K'),
-        textposition: 'outside',
-        textfont: { color: '#fff', size: 10, weight: 700 }
+        textposition: 'outside', textfont: { color: '#fff', size: 10, weight: 700 }
     }], {
         ...baseLayout,
         title: { text: 'Ventes par Artiste (Millions)', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
         xaxis: { ...axisStyle, tickfont: { size: 9, color: '#a3a3a3' }, tickangle: -35 },
         yaxis: { ...axisStyle, title: { text: 'Millions', font: { size: 11 } } },
-        margin: { t: 55, r: 25, b: 130, l: 60 },
-        height: 440
+        margin: { t: 55, r: 25, b: 130, l: 60 }, height: 440
     }, plotlyConfig);
 
-    const artistROI = artistNames.map(a => label.artists[a].roi);
-    const artistInfluence = artistNames.map(a => label.artists[a].influence * 100);
-
     Plotly.newPlot(prefix + 'ROIChart', [
-        {
-            x: artistNames,
-            y: artistROI,
-            mode: 'lines+markers',
-            name: 'ROI (%)',
-            line: { color: label.color, width: 3 },
-            marker: { size: 9, color: label.color, line: { width: 2, color: '#fff' } }
-        },
-        {
-            x: artistNames,
-            y: artistInfluence,
-            mode: 'lines+markers',
-            name: 'Influence (x100)',
-            line: { color: '#60A5FA', width: 3, dash: 'dot' },
-            marker: { size: 9, color: '#60A5FA', line: { width: 2, color: '#fff' } }
-        }
+        { x: artistNames, y: artistNames.map(a => label.artists[a].roi), mode: 'lines+markers', name: 'ROI (%)', line: { color: USA_COLORS.red, width: 3 }, marker: { size: 9, color: USA_COLORS.red, line: { width: 2, color: '#fff' } } },
+        { x: artistNames, y: artistNames.map(a => label.artists[a].influence * 100), mode: 'lines+markers', name: 'Influence (x100)', line: { color: USA_COLORS.blueLight, width: 3, dash: 'dot' }, marker: { size: 9, color: USA_COLORS.blueLight, line: { width: 2, color: '#fff' } } }
     ], {
         ...baseLayout,
         title: { text: 'ROI vs Influence', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
         xaxis: { ...axisStyle, tickfont: { size: 9, color: '#a3a3a3' }, tickangle: -35 },
         yaxis: { ...axisStyle, title: { text: 'Valeur', font: { size: 11 } } },
-        margin: { t: 55, r: 25, b: 130, l: 60 },
-        height: 440,
-        showlegend: true,
-        legend: {
-            orientation: 'h',
-            y: 1.12,
-            x: 1,
-            xanchor: 'right',
-            font: { color: '#fff', size: 10 },
-            bgcolor: 'rgba(0,0,0,0)'
-        }
+        margin: { t: 55, r: 25, b: 130, l: 60 }, height: 440,
+        showlegend: true, legend: { orientation: 'h', y: 1.12, x: 1, xanchor: 'right', font: { color: '#fff', size: 10 }, bgcolor: 'rgba(0,0,0,0)' }
+    }, plotlyConfig);
+
+    Plotly.newPlot(prefix + 'RevenueChart', [{
+        x: artistNames, y: artistNames.map(a => label.artists[a].revenue / 1e6), type: 'bar',
+        marker: { color: artistColors, opacity: 0.85, line: { width: 0 } },
+        text: artistNames.map(a => formatCurrency(label.artists[a].revenue)),
+        textposition: 'outside', textfont: { color: '#fff', size: 10, weight: 700 }
+    }], {
+        ...baseLayout,
+        title: { text: 'Revenus par Artiste', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
+        xaxis: { ...axisStyle, tickfont: { size: 9, color: '#a3a3a3' }, tickangle: -35 },
+        yaxis: { ...axisStyle, title: { text: 'Millions $', font: { size: 11 } } },
+        margin: { t: 55, r: 25, b: 130, l: 60 }, height: 440
+    }, plotlyConfig);
+
+    Plotly.newPlot(prefix + 'BubbleChart', [{
+        x: artistNames.map(a => label.artists[a].albums),
+        y: artistNames.map(a => label.artists[a].roi),
+        mode: 'markers+text',
+        marker: {
+            size: artistNames.map(a => Math.max(15, Math.min(50, label.artists[a].sales / 5e5))),
+            color: artistColors, opacity: 0.85, line: { width: 2, color: '#fff' }
+        },
+        text: artistNames.map(a => a.split(' ')[0]),
+        textposition: 'top center', textfont: { color: '#fff', size: 9, weight: 700 }
+    }], {
+        ...baseLayout,
+        title: { text: 'Albums vs ROI (Taille = Ventes)', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
+        xaxis: { ...axisStyle, title: { text: 'Nombre d\'albums', font: { size: 11 } } },
+        yaxis: { ...axisStyle, title: { text: 'ROI (%)', font: { size: 11 } } },
+        height: 440
     }, plotlyConfig);
 
     document.getElementById(prefix + 'ArtistTable').innerHTML = `
         <table class="artist-table">
-            <thead>
-                <tr>
-                    <th>Artiste</th>
-                    <th>Début</th>
-                    <th>Genre</th>
-                    <th>Albums</th>
-                    <th>Ventes</th>
-                    <th>Revenus</th>
-                    <th>ROI</th>
-                    <th>Influence</th>
-                    <th>Note</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${artistNames.map(a => {
-                    const art = label.artists[a];
-                    return `<tr>
-                        <td class="artist-name" style="color:${label.color}">${a}</td>
-                        <td>${art.debut}</td>
-                        <td style="font-size:0.8rem; color:#a3a3a3;">${art.genre}</td>
-                        <td>${art.albums}</td>
-                        <td>${formatNumber(art.sales)}</td>
-                        <td>${formatCurrency(art.revenue)}</td>
-                        <td>${art.roi}%</td>
-                        <td>${art.influence}/10</td>
-                        <td style="font-size:0.8rem; color:#a3a3a3; max-width:200px; white-space:normal;">${art.note}</td>
-                    </tr>`;
-                }).join('')}
-            </tbody>
-        </table>
-    `;
+            <thead><tr><th>Artiste</th><th>Début</th><th>Genre</th><th>Albums</th><th>Ventes</th><th>Revenus</th><th>ROI</th><th>Influence</th><th>Note</th></tr></thead>
+            <tbody>${artistNames.map(a => {
+                const art = label.artists[a];
+                return `<tr>
+                    <td class="artist-name" style="color:${color === USA_COLORS.red ? USA_COLORS.redLight : USA_COLORS.blueLight}">${a}</td>
+                    <td>${art.debut}</td><td style="font-size:0.8rem; color:#a3a3a3;">${art.genre}</td>
+                    <td>${art.albums}</td><td>${formatNumber(art.sales)}</td><td>${formatCurrency(art.revenue)}</td>
+                    <td>${art.roi}%</td><td>${art.influence}/10</td>
+                    <td style="font-size:0.8rem; color:#a3a3a3; max-width:250px; white-space:normal;">${art.note}</td>
+                </tr>`;
+            }).join('')}</tbody>
+        </table>`;
 
-    // Timeline
     document.getElementById(prefix + 'Timeline').innerHTML = label.timeline.map(item => `
         <div class="timeline-item">
-            <div class="timeline-year" style="color:${label.color}">${item.year}</div>
-            <div class="timeline-content">
-                <span class="event-type" style="background:${label.color}20; color:${label.color}; border:1px solid ${label.color}40;">${item.type}</span>
-                ${item.event}
-            </div>
-        </div>
-    `).join('');
+            <div class="timeline-year" style="color:${color === USA_COLORS.red ? USA_COLORS.redLight : USA_COLORS.blueLight}">${item.year}</div>
+            <div class="timeline-content"><span class="event-type">${item.type}</span>${item.event}</div>
+        </div>`).join('');
 }
 
 // ============================================================
@@ -1479,123 +1541,65 @@ function updateComparator() {
         'Influence': Math.max(...Object.values(LABELS_DATA).map(l => l.influence))
     };
 
-    const vals1 = [
-        l1.totalSales / maxVals['Ventes'] * 100,
-        l1.totalArtists / maxVals['Artistes'] * 100,
-        l1.totalAlbums / maxVals['Albums'] * 100,
-        l1.totalRevenue / maxVals['Revenus'] * 100,
-        l1.influence / maxVals['Influence'] * 100
-    ];
-    const vals2 = [
-        l2.totalSales / maxVals['Ventes'] * 100,
-        l2.totalArtists / maxVals['Artistes'] * 100,
-        l2.totalAlbums / maxVals['Albums'] * 100,
-        l2.totalRevenue / maxVals['Revenus'] * 100,
-        l2.influence / maxVals['Influence'] * 100
-    ];
+    const vals1 = [l1.totalSales / maxVals['Ventes'] * 100, l1.totalArtists / maxVals['Artistes'] * 100, l1.totalAlbums / maxVals['Albums'] * 100, l1.totalRevenue / maxVals['Revenus'] * 100, l1.influence / maxVals['Influence'] * 100];
+    const vals2 = [l2.totalSales / maxVals['Ventes'] * 100, l2.totalArtists / maxVals['Artistes'] * 100, l2.totalAlbums / maxVals['Albums'] * 100, l2.totalRevenue / maxVals['Revenus'] * 100, l2.influence / maxVals['Influence'] * 100];
 
     function hexToRgba(hex, alpha) {
-        const r = parseInt(hex.slice(1, 3), 16);
-        const g = parseInt(hex.slice(3, 5), 16);
-        const b = parseInt(hex.slice(5, 7), 16);
+        const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
         return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
     Plotly.newPlot('compareRadarChart', [
-        {
-            type: 'scatterpolar',
-            r: vals1.concat(vals1[0]),
-            theta: categories.concat(categories[0]),
-            fill: 'toself',
-            name: l1.name,
-            fillcolor: hexToRgba(l1.color, 0.25),
-            line: { color: l1.color, width: 3 },
-            marker: { size: 7, color: l1.color }
-        },
-        {
-            type: 'scatterpolar',
-            r: vals2.concat(vals2[0]),
-            theta: categories.concat(categories[0]),
-            fill: 'toself',
-            name: l2.name,
-            fillcolor: hexToRgba(l2.color, 0.25),
-            line: { color: l2.color, width: 3 },
-            marker: { size: 7, color: l2.color }
-        }
+        { type: 'scatterpolar', r: vals1.concat(vals1[0]), theta: categories.concat(categories[0]), fill: 'toself', name: l1.name, fillcolor: hexToRgba(l1.color, 0.25), line: { color: l1.color, width: 3 }, marker: { size: 7, color: l1.color } },
+        { type: 'scatterpolar', r: vals2.concat(vals2[0]), theta: categories.concat(categories[0]), fill: 'toself', name: l2.name, fillcolor: hexToRgba(l2.color, 0.25), line: { color: l2.color, width: 3 }, marker: { size: 7, color: l2.color } }
     ], {
-        paper_bgcolor: 'rgba(0,0,0,0)',
-        plot_bgcolor: 'rgba(0,0,0,0)',
+        paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
         font: { color: '#ffffff', size: 12 },
         title: { text: 'Comparaison Radar (Normalisée)', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
-        polar: {
-            bgcolor: 'rgba(20,20,20,0.6)',
-            radialaxis: {
-                visible: true,
-                range: [0, 100],
-                gridcolor: '#2a2a2a',
-                tickfont: { color: '#a3a3a3', size: 9 },
-                linecolor: '#2a2a2a'
-            },
-            angularaxis: {
-                gridcolor: '#2a2a2a',
-                tickfont: { color: '#fff', size: 11, weight: 700 },
-                linecolor: '#2a2a2a'
-            }
-        },
-        legend: {
-            orientation: 'h',
-            y: 1.12,
-            x: 1,
-            xanchor: 'right',
-            font: { color: '#fff', size: 11 },
-            bgcolor: 'rgba(0,0,0,0)'
-        },
-        showlegend: true,
-        margin: { t: 55, r: 25, b: 30, l: 25 },
-        height: 460,
-        autosize: true
+        polar: { bgcolor: 'rgba(20,20,20,0.6)', radialaxis: { visible: true, range: [0, 100], gridcolor: '#2a2a2a', tickfont: { color: '#a3a3a3', size: 9 }, linecolor: '#2a2a2a' }, angularaxis: { gridcolor: '#2a2a2a', tickfont: { color: '#fff', size: 11, weight: 700 }, linecolor: '#2a2a2a' } },
+        legend: { orientation: 'h', y: 1.12, x: 1, xanchor: 'right', font: { color: '#fff', size: 11 }, bgcolor: 'rgba(0,0,0,0)' },
+        showlegend: true, margin: { t: 55, r: 25, b: 30, l: 25 }, height: 460, autosize: true
     }, plotlyConfig);
 
     Plotly.newPlot('compareBarChart', [
-        {
-            x: categories,
-            y: [l1.totalSales / 1e6, l1.totalArtists, l1.totalAlbums, l1.totalRevenue / 1e6, l1.influence],
-            name: l1.name,
-            type: 'bar',
-            marker: { color: l1.color, opacity: 0.85, line: { width: 0 } },
-            text: [formatNumber(l1.totalSales), l1.totalArtists, l1.totalAlbums, formatCurrency(l1.totalRevenue), l1.influence],
-            textposition: 'outside',
-            textfont: { color: '#fff', size: 10, weight: 700 }
-        },
-        {
-            x: categories,
-            y: [l2.totalSales / 1e6, l2.totalArtists, l2.totalAlbums, l2.totalRevenue / 1e6, l2.influence],
-            name: l2.name,
-            type: 'bar',
-            marker: { color: l2.color, opacity: 0.85, line: { width: 0 } },
-            text: [formatNumber(l2.totalSales), l2.totalArtists, l2.totalAlbums, formatCurrency(l2.totalRevenue), l2.influence],
-            textposition: 'outside',
-            textfont: { color: '#fff', size: 10, weight: 700 }
-        }
+        { x: categories, y: [l1.totalSales / 1e6, l1.totalArtists, l1.totalAlbums, l1.totalRevenue / 1e6, l1.influence], name: l1.name, type: 'bar', marker: { color: l1.color, opacity: 0.85, line: { width: 0 } }, text: [formatNumber(l1.totalSales), l1.totalArtists, l1.totalAlbums, formatCurrency(l1.totalRevenue), l1.influence], textposition: 'outside', textfont: { color: '#fff', size: 10, weight: 700 } },
+        { x: categories, y: [l2.totalSales / 1e6, l2.totalArtists, l2.totalAlbums, l2.totalRevenue / 1e6, l2.influence], name: l2.name, type: 'bar', marker: { color: l2.color, opacity: 0.85, line: { width: 0 } }, text: [formatNumber(l2.totalSales), l2.totalArtists, l2.totalAlbums, formatCurrency(l2.totalRevenue), l2.influence], textposition: 'outside', textfont: { color: '#fff', size: 10, weight: 700 } }
     ], {
         ...baseLayout,
         title: { text: 'Comparaison par Métrique', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
-        barmode: 'group',
-        bargap: 0.25,
-        bargroupgap: 0.1,
+        barmode: 'group', bargap: 0.25, bargroupgap: 0.1,
         xaxis: { ...axisStyle, tickfont: { size: 11, color: '#fff' } },
         yaxis: { ...axisStyle, title: { text: 'Valeur', font: { size: 11 } } },
-        legend: {
-            orientation: 'h',
-            y: 1.12,
-            x: 1,
-            xanchor: 'right',
-            font: { color: '#fff', size: 11 },
-            bgcolor: 'rgba(0,0,0,0)'
-        },
-        showlegend: true,
-        margin: { t: 55, r: 25, b: 60, l: 60 },
-        height: 460
+        legend: { orientation: 'h', y: 1.12, x: 1, xanchor: 'right', font: { color: '#fff', size: 11 }, bgcolor: 'rgba(0,0,0,0)' },
+        showlegend: true, margin: { t: 55, r: 25, b: 60, l: 60 }, height: 460
+    }, plotlyConfig);
+
+    const events = [
+        { year: l1.founded, name: l1.name, color: l1.color, y: 2 },
+        { year: l2.founded, name: l2.name, color: l2.color, y: 1 }
+    ];
+
+    Plotly.newPlot('compareTimelineChart', [{
+        x: events.map(e => e.year), y: events.map(e => e.y), mode: 'markers+text',
+        marker: { size: 28, color: events.map(e => e.color), line: { width: 3, color: '#fff' } },
+        text: events.map(e => `<b>${e.name}</b><br>${e.year}`), textposition: 'top center', textfont: { color: '#fff', size: 12 }
+    }], {
+        ...baseLayout,
+        title: { text: 'Chronologie Comparative', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
+        xaxis: { ...axisStyle, title: { text: 'Année', font: { size: 11 } }, range: [Math.min(l1.founded, l2.founded) - 5, Math.max(l1.founded, l2.founded) + 5] },
+        yaxis: { showticklabels: false, showgrid: false, range: [0.3, 2.7], zeroline: false }, height: 320
+    }, plotlyConfig);
+
+    Plotly.newPlot('compareScatterChart', [
+        { x: [l1.totalSales / 1e6], y: [l1.totalRevenue / 1e6], mode: 'markers+text', name: l1.name, marker: { size: 40, color: l1.color, line: { width: 3, color: '#fff' } }, text: [l1.name.split(' ')[0]], textposition: 'top center', textfont: { color: '#fff', size: 11 } },
+        { x: [l2.totalSales / 1e6], y: [l2.totalRevenue / 1e6], mode: 'markers+text', name: l2.name, marker: { size: 40, color: l2.color, line: { width: 3, color: '#fff' } }, text: [l2.name.split(' ')[0]], textposition: 'top center', textfont: { color: '#fff', size: 11 } }
+    ], {
+        ...baseLayout,
+        title: { text: 'Ventes vs Revenus', font: { color: '#fff', size: 14 }, x: 0.02, xanchor: 'left' },
+        xaxis: { ...axisStyle, title: { text: 'Ventes (Millions)', font: { size: 11 } } },
+        yaxis: { ...axisStyle, title: { text: 'Revenus (Millions $)', font: { size: 11 } } },
+        showlegend: true, legend: { orientation: 'h', y: 1.12, x: 1, xanchor: 'right', font: { color: '#fff', size: 10 }, bgcolor: 'rgba(0,0,0,0)' },
+        height: 320
     }, plotlyConfig);
 
     const metrics = [
@@ -1609,6 +1613,7 @@ function updateComparator() {
         { label: 'Artistes', v1: l1.totalArtists, v2: l2.totalArtists },
         { label: 'Albums', v1: l1.totalAlbums, v2: l2.totalAlbums },
         { label: 'Revenus', v1: formatCurrency(l1.totalRevenue), v2: formatCurrency(l2.totalRevenue) },
+        { label: 'Revenus Annuels', v1: l1.annualRevenue, v2: l2.annualRevenue },
         { label: 'Pic de Revenus', v1: l1.peakRevenue, v2: l2.peakRevenue },
         { label: 'Influence', v1: l1.influence + '/70', v2: l2.influence + '/70' },
         { label: 'Ratio Revenus/Ventes', v1: (l1.totalRevenue / l1.totalSales * 100).toFixed(1) + '%', v2: (l2.totalRevenue / l2.totalSales * 100).toFixed(1) + '%' },
@@ -1617,24 +1622,9 @@ function updateComparator() {
 
     document.getElementById('compareTable').innerHTML = `
         <table class="artist-table">
-            <thead>
-                <tr>
-                    <th>Métrique</th>
-                    <th style="color:${l1.color}">${l1.name}</th>
-                    <th style="color:${l2.color}">${l2.name}</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${metrics.map(m => `
-                    <tr>
-                        <td style="font-weight:700;">${m.label}</td>
-                        <td style="color:${l1.color}">${m.v1}</td>
-                        <td style="color:${l2.color}">${m.v2}</td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
-    `;
+            <thead><tr><th>Métrique</th><th style="color:${l1.color === USA_COLORS.red ? USA_COLORS.redLight : USA_COLORS.blueLight}">${l1.name}</th><th style="color:${l2.color === USA_COLORS.red ? USA_COLORS.redLight : USA_COLORS.blueLight}">${l2.name}</th></tr></thead>
+            <tbody>${metrics.map(m => `<tr><td style="font-weight:700;">${m.label}</td><td style="color:${l1.color === USA_COLORS.red ? USA_COLORS.redLight : USA_COLORS.blueLight}">${m.v1}</td><td style="color:${l2.color === USA_COLORS.red ? USA_COLORS.redLight : USA_COLORS.blueLight}">${m.v2}</td></tr>`).join('')}</tbody>
+        </table>`;
 }
 
 // ============================================================
@@ -1644,14 +1634,11 @@ function updateComparator() {
 document.addEventListener('DOMContentLoaded', () => {
     renderOverview();
     updateComparator();
-    
     let resizeTimeout;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-            document.querySelectorAll('.tab-content.active .js-plotly-plot').forEach(el => {
-                Plotly.Plots.resize(el);
-            });
+            document.querySelectorAll('.tab-content.active .js-plotly-plot').forEach(el => Plotly.Plots.resize(el));
         }, 150);
     });
 });
